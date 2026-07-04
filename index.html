@@ -48,42 +48,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script>
-emailjs.init("usQhC7MdvtgvFHMtx");
-
-document.getElementById("appointmentForm").addEventListener("submit", function(e){
-    e.preventDefault();
-
-    const name = document.getElementById("fullName").value;
-    const mobile = document.getElementById("mobile").value;
-    const issue = document.getElementById("issue").value;
-
-    emailjs.send("service_kit0x37","template_cmg5qlq",{
-        fullName: name,
-        mobile: mobile,
-        issue: issue
-    }).then(function(){
-
-        const msg =
-`New Appointment
-
-Name: ${name}
-Mobile: ${mobile}
-Issue: ${issue}`;
-
-        window.open("https://wa.me/919454337340?text="+encodeURIComponent(msg),"_blank");
-
-        alert("Appointment Submitted Successfully!");
-
-        document.getElementById("appointmentForm").reset();
-
-    },function(error){
-        alert("Email Error: "+JSON.stringify(error));
-    });
-});
-</script>
 <body>
 
 <a href="tel:9454337340" class="floating-call" aria-label="Call now">📞</a>
@@ -307,6 +271,7 @@ Issue: ${issue}`;
   <p>Website: <a href="https://advocatepratibhayadav.in">advocatepratibhayadav.in</a></p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
