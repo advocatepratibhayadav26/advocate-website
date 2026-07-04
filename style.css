@@ -160,3 +160,30 @@ transition:.3s;
 transform:translateY(-5px);
 box-shadow:0 0 25px rgba(255,215,0,.35);
 }
+.floating-whatsapp,
+.floating-call{
+position:fixed;
+right:20px;
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+font-size:28px;
+color:#fff;
+box-shadow:0 0 15px rgba(0,0,0,.4);
+z-index:999;
+}
+
+.floating-whatsapp{
+bottom:20px;
+background:#25D366;
+}
+
+.floating-call{
+bottom:95px;
+background:#f4b400;
+color:#000;
+}
