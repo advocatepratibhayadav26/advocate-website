@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://advocatepratibhayadav26.github.io/advocate-website/sitemap.xml
