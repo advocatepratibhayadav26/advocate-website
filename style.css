@@ -351,7 +351,12 @@ footer{
   .hero-inner{ grid-template-columns: 1fr; text-align:center; }
   .hero-actions{ justify-content:center; }
   .hero-seal-wrap{ order: -1; }
-  nav{ display:none; }
+  nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
+}
   .header-inner{ justify-content:center; text-align:center; }
   .floating-whatsapp{ right: 22px; bottom: 84px; }
              }
