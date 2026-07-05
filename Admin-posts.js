@@ -1,10 +1,11 @@
 // ============================================================
-// ADMIN — MANAGE POSTS
+// ADMIN — MANAGE POSTS (No Firebase Storage / No Blaze plan needed)
 // Firebase Realtime Database: posts/{postId}
-// Firebase Storage: posts/{timestamp}_{filename} (images & PDFs)
+// Images are resized + compressed in the browser and stored as
+// a base64 string directly in the database (imageUrl field).
+// PDFs are stored as an external link (e.g. Google Drive) in pdfUrl.
 // ============================================================
 (function () {
-  const storage = firebase.storage();
   const postsRef = database.ref('posts');
 
   const postForm = document.getElementById('postForm');
@@ -14,10 +15,7 @@
   const postCategory = document.getElementById('postCategory');
   const postImage = document.getElementById('postImage');
   const postImagePreview = document.getElementById('postImagePreview');
-  const postImageProgress = document.getElementById('postImageProgress');
-  const postPdf = document.getElementById('postPdf');
-  const postPdfName = document.getElementById('postPdfName');
-  const postPdfProgress = document.getElementById('postPdfProgress');
+  const postPdfUrl = document.getElementById('postPdfUrl');
   const postContent = document.getElementById('postContent');
   const postPin = document.getElementById('postPin');
   const postSubmitBtn = document.getElementById('postSubmitBtn');
@@ -29,7 +27,10 @@
 
   let allAdminPosts = [];
   let existingImageUrl = '';
-  let existingPdfUrl = '';
+  let pendingImageBase64 = null; // set once a new image is picked + compressed
+
+  const MAX_IMAGE_WIDTH = 900;
+  const IMAGE_QUALITY = 0.72;
 
   // ---------- Live list of posts ----------
   postsRef.on('value', (snapshot) => {
@@ -103,9 +104,10 @@
     postCategory.value = post.category || '';
     postContent.value = post.content || '';
     postPin.checked = !!post.pinned;
+    postPdfUrl.value = post.pdfUrl || '';
 
     existingImageUrl = post.imageUrl || '';
-    existingPdfUrl = post.pdfUrl || '';
+    pendingImageBase64 = null;
 
     if (existingImageUrl) {
       postImagePreview.src = existingImageUrl;
@@ -113,7 +115,6 @@
     } else {
       postImagePreview.hidden = true;
     }
-    postPdfName.textContent = existingPdfUrl ? 'Current attachment already uploaded.' : '';
 
     postForm.scrollIntoView({ behavior: 'smooth' });
   }
@@ -127,44 +128,49 @@
     postSubmitBtn.textContent = '📅 Publish';
     postCancelEditBtn.hidden = true;
     postImagePreview.hidden = true;
-    postPdfName.textContent = '';
     existingImageUrl = '';
-    existingPdfUrl = '';
+    pendingImageBase64 = null;
   }
 
-  // ---------- Image preview ----------
+  // ---------- Image select -> resize + compress -> base64 ----------
   postImage.addEventListener('change', () => {
     const file = postImage.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      postImagePreview.src = e.target.result;
-      postImagePreview.hidden = false;
-    };
-    reader.readAsDataURL(file);
-  });
 
-  postPdf.addEventListener('change', () => {
-    const file = postPdf.files[0];
-    postPdfName.textContent = file ? '📎 ' + file.name : '';
-  });
-
-  // ---------- Upload helper ----------
-  function uploadFile(file, folder, progressEl) {
-    return new Promise((resolve, reject) => {
-      const path = `${folder}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_')}`;
-      const task = storage.ref(path).put(file);
-      progressEl.hidden = false;
-
-      task.on('state_changed', (snap) => {
-        progressEl.value = (snap.bytesTransferred / snap.totalBytes) * 100;
-      }, (err) => {
-        progressEl.hidden = true;
-        reject(err);
-      }, () => {
-        progressEl.hidden = true;
-        task.snapshot.ref.getDownloadURL().then(resolve).catch(reject);
+    resizeImageToBase64(file, MAX_IMAGE_WIDTH, IMAGE_QUALITY)
+      .then((base64) => {
+        pendingImageBase64 = base64;
+        postImagePreview.src = base64;
+        postImagePreview.hidden = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        alert('Could not process image. Please try a different photo.');
       });
+  });
+
+  function resizeImageToBase64(file, maxWidth, quality) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxWidth) {
+            height = Math.round(height * (maxWidth / width));
+            width = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
     });
   }
 
@@ -177,23 +183,15 @@
     hideStatus();
 
     try {
-      let imageUrl = existingImageUrl;
-      let pdfUrl = existingPdfUrl;
-
-      if (postImage.files[0]) {
-        imageUrl = await uploadFile(postImage.files[0], 'posts', postImageProgress);
-      }
-      if (postPdf.files[0]) {
-        pdfUrl = await uploadFile(postPdf.files[0], 'posts-pdf', postPdfProgress);
-      }
+      const imageUrl = pendingImageBase64 || existingImageUrl || '';
 
       const record = {
         title: postTitle.value.trim(),
         category: postCategory.value.trim(),
         content: postContent.value.trim(),
         pinned: !!postPin.checked,
-        imageUrl: imageUrl || '',
-        pdfUrl: pdfUrl || ''
+        imageUrl: imageUrl,
+        pdfUrl: postPdfUrl.value.trim()
       };
 
       if (editingPostId.value) {
