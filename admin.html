@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard | Advocate Pratibha Yadav</title>
+
+<link rel="stylesheet" href="admin.css">
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+</head>
+
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<div id="stats">
+    <h3>Total Appointments:
+        <span id="totalAppointments">0</span>
+    </h3>
+</div>
+
+<table border="1" width="100%">
+<thead>
+<tr>
+<th>Name</th>
+<th>Mobile</th>
+<th>Issue</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="appointmentTable">
+
+</tbody>
+
+</table>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyClCRUp9qqJ1dPR_hCG5zxKG_T5ypVGXqc",
+  authDomain: "advocate-pratibha-yadav.firebaseapp.com",
+  databaseURL: "https://advocate-pratibha-yadav-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "advocate-pratibha-yadav",
+  storageBucket: "advocate-pratibha-yadav.firebasestorage.app",
+  messagingSenderId: "737527211054",
+  appId: "1:737527211054:web:55ac7b0559983ac20d2bbf",
+  measurementId: "G-J7GD1Y9E70"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const database = firebase.database();
+</script>
+
+<script src="admin.js"></script>
+
+</body>
+</html>
