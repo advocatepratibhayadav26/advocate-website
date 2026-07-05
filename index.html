@@ -104,6 +104,10 @@
 </head>
 <body>
 
+<div id="pageLoader" class="page-loader">
+  <span class="page-loader-mark">⚖</span>
+</div>
+
 <a href="tel:9454337340" class="floating-call" aria-label="Call now">📞</a>
 <a href="https://wa.me/919454337340" class="floating-whatsapp" aria-label="Message on WhatsApp">💬</a>
 
@@ -135,20 +139,20 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <p class="eyebrow">Bar Council of Uttar Pradesh</p>
-      <h2>Advocate<br>Pratibha Yadav</h2>
-      <p class="hero-degree">B.A. LL.B.</p>
-      <p class="hero-desc">Civil · Criminal · Family · Property · Consumer Matters</p>
-      <p class="hero-location">📍 Mahmudabad, District Sitapur, Uttar Pradesh</p>
-      <p class="hero-tagline">Trusted Legal Advice • Honest Representation • Client First</p>
-      <p class="hero-longdesc">Experienced Advocate providing Civil, Criminal, Family, Property, Consumer and Documentation Legal Services in Mahmudabad, Sitapur and nearby areas.</p>
-      <div class="hero-actions">
+      <p class="eyebrow hero-anim hero-anim-1">Bar Council of Uttar Pradesh</p>
+      <h2 class="hero-anim hero-anim-2">Advocate<br>Pratibha Yadav</h2>
+      <p class="hero-degree hero-anim hero-anim-3">B.A. LL.B.</p>
+      <p class="hero-desc hero-anim hero-anim-3">Civil · Criminal · Family · Property · Consumer Matters</p>
+      <p class="hero-location hero-anim hero-anim-4">📍 Mahmudabad, District Sitapur, Uttar Pradesh</p>
+      <p class="hero-tagline hero-anim hero-anim-4">Trusted Legal Advice • Honest Representation • Client First</p>
+      <p class="hero-longdesc hero-anim hero-anim-5">Experienced Advocate providing Civil, Criminal, Family, Property, Consumer and Documentation Legal Services in Mahmudabad, Sitapur and nearby areas.</p>
+      <div class="hero-actions hero-anim hero-anim-6">
         <a class="btn" href="tel:9454337340">📞 Call Now</a>
         <a class="btn2" href="https://wa.me/919454337340">💬 WhatsApp</a>
         <a class="btn3" href="#appointment">📅 Book Appointment</a>
       </div>
     </div>
-    <div class="hero-seal-wrap">
+    <div class="hero-seal-wrap hero-anim hero-anim-3">
       <img src="profile.jpg"
            alt="Advocate Pratibha Yadav"
            class="profile-photo"
@@ -170,7 +174,7 @@
   </div>
 </section>
 
-<section id="experience" class="section">
+<section id="experience" class="section reveal">
   <p class="eyebrow center">Why Clients Choose This Office</p>
   <h2 class="section-title center">Credentials on Record</h2>
   <div class="card-grid">
@@ -194,7 +198,7 @@
   </div>
 </section>
 
-<section id="about" class="section alt">
+<section id="about" class="section alt reveal">
   <div class="about-inner">
     <p class="eyebrow">About the Advocate</p>
     <h2 class="section-title">Personal attention, on record</h2>
@@ -206,7 +210,7 @@
   </div>
 </section>
 
-<section id="services" class="section">
+<section id="services" class="section reveal">
   <p class="eyebrow center">Practice Areas</p>
   <h2 class="section-title center">What This Office Handles</h2>
   <div class="card-grid services-grid">
@@ -219,7 +223,7 @@
   </div>
 </section>
 
-<section id="reviews" class="section alt">
+<section id="reviews" class="section alt reveal">
   <p class="eyebrow center">Client Reviews</p>
   <h2 class="section-title center">In Their Words</h2>
   <div class="card-grid reviews-grid">
@@ -234,7 +238,7 @@
   </div>
 </section>
 
-<section id="faq" class="section alt">
+<section id="faq" class="section alt reveal">
   <p class="eyebrow center">Common Questions</p>
   <h2 class="section-title center">Frequently Asked Questions</h2>
   <div class="card-grid">
@@ -249,7 +253,7 @@
   </div>
 </section>
 
-<section id="appointment" class="section">
+<section id="appointment" class="section reveal">
   <p class="eyebrow center">Book a Consultation</p>
   <h2 class="section-title center">Request an Appointment</h2>
   <form class="appointment-form" id="appointmentForm">
@@ -267,7 +271,7 @@
   </form>
 </section>
 
-<section id="location" class="section alt">
+<section id="location" class="section alt reveal">
   <p class="eyebrow center">Office Location</p>
   <h2 class="section-title center">Mahmudabad, District Sitapur</h2>
   <div class="map-wrap">
@@ -282,7 +286,7 @@
   </div>
 </section>
 
-<section id="posts" class="section">
+<section id="posts" class="section reveal">
   <p class="eyebrow center">Latest Updates</p>
   <h2 class="section-title center">Legal News & Office Updates</h2>
 
@@ -299,7 +303,7 @@
   <p id="postsEmpty" class="empty-state" hidden>No updates posted yet. Please check back soon.</p>
 </section>
 
-<section id="contact" class="section contact-section">
+<section id="contact" class="section contact-section reveal">
   <p class="eyebrow center">Get in Touch</p>
   <h2 class="section-title center">Contact the Office</h2>
   <div class="contact-grid">
@@ -332,16 +336,56 @@
   </div>
 </section>
 
-<footer>
-  <div class="footer-links">
-    <a href="privacy.html">Privacy Policy</a>
-    <span aria-hidden="true">·</span>
-    <a href="disclaimer.html">Disclaimer</a>
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <div class="footer-brand">
+        <span class="brand-mark">⚖</span>
+        <div>
+          <h3>Advocate Pratibha Yadav</h3>
+          <p>Civil Court, Mahmudabad</p>
+        </div>
+      </div>
+      <p class="footer-tagline">Trusted Legal Advice • Honest Representation • Client First</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-quicklinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Practice Areas</a></li>
+        <li><a href="#posts">Latest Updates</a></li>
+        <li><a href="#appointment">Book Appointment</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Get in Touch</h4>
+      <div class="footer-contact-icons">
+        <a href="tel:9454337340" class="footer-icon-link" aria-label="Call">📞 9454337340</a>
+        <a href="https://wa.me/919454337340" class="footer-icon-link" aria-label="WhatsApp">💬 WhatsApp</a>
+        <a href="mailto:advocatepratibhayadav26@gmail.com" class="footer-icon-link" aria-label="Email">📧 Email</a>
+      </div>
+    </div>
   </div>
-  <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
-  <p>Civil Court, Mahmudabad • District Sitapur • Uttar Pradesh</p>
-  <p>Website: <a href="https://advocatepratibhayadav.in">advocatepratibhayadav.in</a></p>
+
+  <div class="footer-bottom">
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <span aria-hidden="true">·</span>
+      <a href="disclaimer.html">Disclaimer</a>
+    </div>
+    <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
+  </div>
 </footer>
+
+<!-- Mobile Sticky Bottom Bar -->
+<div class="sticky-bottom-bar">
+  <a href="tel:9454337340" class="sticky-bar-btn">📞<span>Call</span></a>
+  <a href="https://wa.me/919454337340" class="sticky-bar-btn" target="_blank">💬<span>WhatsApp</span></a>
+  <a href="#appointment" class="sticky-bar-btn sticky-bar-btn-primary">📅<span>Book</span></a>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
