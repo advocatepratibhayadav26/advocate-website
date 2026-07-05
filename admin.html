@@ -1,153 +1,373 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard | Advocate Pratibha Yadav</title>
-<meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%231B2A41'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%23C9A45C'%3E%E2%9A%96%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="admin.css">
-</head>
-<body data-theme="light">
+// ============================================================
+// CONFIG
+// Login is now handled by Firebase Authentication (real backend).
+// Create the admin's login in Firebase Console → Authentication →
+// Sign-in method → enable "Email/Password" → Users → Add user.
+// ============================================================
+const auth = firebase.auth();
 
-<!-- ===== LOGIN SCREEN ===== -->
-<section id="loginScreen" class="login-screen">
-  <form id="loginForm" class="login-card">
-    <span class="login-mark">⚖</span>
-    <h1>Admin Login</h1>
-    <p class="login-sub">Advocate Pratibha Yadav — Office Dashboard</p>
+// ============================================================
+// ELEMENTS
+// ============================================================
+const loginScreen = document.getElementById('loginScreen');
+const loginForm = document.getElementById('loginForm');
+const loginError = document.getElementById('loginError');
+const dashboard = document.getElementById('dashboard');
+const logoutBtn = document.getElementById('logoutBtn');
+const themeToggle = document.getElementById('themeToggle');
 
-    <label for="email">Email</label>
-    <input id="email" type="email" autocomplete="username" required>
+const searchInput = document.getElementById('searchInput');
+const statusFilter = document.getElementById('statusFilter');
+const sortOrder = document.getElementById('sortOrder');
+const tableBody = document.getElementById('tableBody');
+const emptyState = document.getElementById('emptyState');
 
-    <label for="password">Password</label>
-    <input id="password" type="password" autocomplete="current-password" required>
+const exportExcelBtn = document.getElementById('exportExcelBtn');
+const exportPdfBtn = document.getElementById('exportPdfBtn');
+const clearAllBtn = document.getElementById('clearAllBtn');
 
-    <p id="loginError" class="login-error" hidden>Incorrect email or password.</p>
+const editModal = document.getElementById('editModal');
+const editForm = document.getElementById('editForm');
+const editName = document.getElementById('editName');
+const editMobile = document.getElementById('editMobile');
+const editIssue = document.getElementById('editIssue');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
 
-    <button type="submit">Log In</button>
-  </form>
-</section>
+const THEME_KEY = 'pyadav_admin_theme';
 
-<!-- ===== DASHBOARD ===== -->
-<div id="dashboard" class="dashboard" hidden>
+let editingId = null;
+let allRecords = [];
+let unsubscribeSnapshot = null;
 
-  <header class="admin-header">
-    <div class="admin-brand">
-      <span class="brand-mark">⚖</span>
-      <div>
-        <h1>Admin Dashboard</h1>
-        <p class="brand-sub">Advocate Pratibha Yadav · Appointments</p>
-      </div>
-    </div>
-    <div class="header-actions">
-      <button id="themeToggle" class="theme-toggle" title="Toggle theme">🌙 Dark Gold</button>
-      <button id="logoutBtn" class="logout-btn">Log Out</button>
-    </div>
-  </header>
+// ============================================================
+// AUTH (Firebase)
+// ============================================================
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    showDashboard();
+  } else {
+    showLogin();
+  }
+});
 
-  <main class="admin-main">
+function showDashboard() {
+  loginScreen.hidden = true;
+  dashboard.hidden = false;
+  startListening();
+}
 
-    <!-- Stats -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <p class="stat-value" id="statTotal">0</p>
-        <p class="stat-label">Total Appointments</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-value" id="statToday">0</p>
-        <p class="stat-label">Today</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-value" id="statWeek">0</p>
-        <p class="stat-label">This Week</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-value" id="statNew">0</p>
-        <p class="stat-label">Awaiting Contact</p>
-      </div>
-    </section>
+function showLogin() {
+  dashboard.hidden = true;
+  loginScreen.hidden = false;
+  if (unsubscribeSnapshot) {
+    unsubscribeSnapshot();
+    unsubscribeSnapshot = null;
+  }
+  allRecords = [];
+}
 
-    <!-- Search + Filters -->
-    <section class="controls-bar">
-      <input id="searchInput" type="text" placeholder="🔍 Search by name, mobile, or issue…" class="search-input">
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
 
-      <select id="statusFilter" class="filter-select">
-        <option value="all">All Statuses</option>
-        <option value="new">New</option>
-        <option value="contacted">Contacted</option>
-        <option value="resolved">Resolved</option>
-      </select>
+  loginError.hidden = true;
 
-      <select id="sortOrder" class="filter-select">
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-      </select>
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      loginForm.reset();
+    })
+    .catch((err) => {
+      console.error(err);
+      loginError.textContent = 'Login failed: ' + (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
+        ? 'Incorrect email or password.'
+        : err.message);
+      loginError.hidden = false;
+    });
+});
 
-      <button id="exportExcelBtn" class="secondary-btn">📊 Export Excel</button>
-      <button id="exportPdfBtn" class="secondary-btn">📄 Export PDF</button>
-      <button id="clearAllBtn" class="danger-btn">🗑 Clear All</button>
-    </section>
+logoutBtn.addEventListener('click', () => {
+  auth.signOut();
+});
 
-    <!-- Appointments Table -->
-    <section class="table-wrap">
-      <table id="appointmentsTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Issue</th>
-            <th>Received</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- rows injected by admin.js -->
-        </tbody>
-      </table>
-      <p id="emptyState" class="empty-state" hidden>No appointments found.</p>
-    </section>
+// ============================================================
+// THEME
+// ============================================================
+function applyTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  themeToggle.textContent = theme === 'dark' ? '☀ Light' : '🌙 Dark Gold';
+  localStorage.setItem(THEME_KEY, theme);
+}
 
-  </main>
-</div>
+applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 
-<!-- ===== EDIT MODAL ===== -->
-<div id="editModal" class="modal-overlay" hidden>
-  <form id="editForm" class="modal-card">
-    <h2>Edit Appointment</h2>
+themeToggle.addEventListener('click', () => {
+  const current = document.body.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
 
-    <label for="editName">Full Name</label>
-    <input id="editName" type="text" required>
+// ============================================================
+// DATA (Realtime Database, live updates)
+// ============================================================
+const appointmentsRef = database.ref('appointments');
 
-    <label for="editMobile">Mobile Number</label>
-    <input id="editMobile" type="tel" pattern="[0-9]{10}" required>
+function startListening() {
+  if (unsubscribeSnapshot) return; // already listening
 
-    <label for="editIssue">Legal Issue</label>
-    <textarea id="editIssue" rows="4"></textarea>
+  appointmentsRef.on('value', (snapshot) => {
+    const data = snapshot.val() || {};
+    allRecords = Object.keys(data).map((key) => {
+      const rec = data[key];
+      return {
+        id: key,
+        fullName: rec.fullName || '',
+        mobile: rec.mobile || '',
+        issue: rec.issue || '',
+        status: rec.status || 'new',
+        createdAt: rec.createdAt
+          ? new Date(rec.createdAt).toISOString()
+          : new Date().toISOString()
+      };
+    });
+    renderTable();
+  }, (err) => {
+    console.error('Realtime Database listener error:', err);
+    alert('Could not load appointments. Check your Firebase config and database rules.');
+  });
 
-    <div class="modal-actions">
-      <button type="button" id="cancelEditBtn" class="secondary-btn ghost">Cancel</button>
-      <button type="submit" class="secondary-btn">Save Changes</button>
-    </div>
-  </form>
-</div>
+  unsubscribeSnapshot = () => appointmentsRef.off('value');
+}
 
-<!-- Excel export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<!-- PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+// ============================================================
+// STATS
+// ============================================================
+function renderStats() {
+  const records = allRecords;
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfWeek = new Date(startOfToday);
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
 
-<!-- Firebase (Auth + Realtime Database) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
-<script src="firebase-config.js"></script>
+  const total = records.length;
+  const today = records.filter(r => new Date(r.createdAt) >= startOfToday).length;
+  const week = records.filter(r => new Date(r.createdAt) >= startOfWeek).length;
+  const awaiting = records.filter(r => r.status === 'new').length;
 
-<script src="admin.js"></script>
-</body>
-</html>
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statToday').textContent = today;
+  document.getElementById('statWeek').textContent = week;
+  document.getElementById('statNew').textContent = awaiting;
+}
+
+// ============================================================
+// TABLE RENDER
+// ============================================================
+function getFilteredRecords() {
+  let records = [...allRecords];
+
+  const query = searchInput.value.trim().toLowerCase();
+  if (query) {
+    records = records.filter(r =>
+      r.fullName.toLowerCase().includes(query) ||
+      r.mobile.toLowerCase().includes(query) ||
+      (r.issue || '').toLowerCase().includes(query)
+    );
+  }
+
+  const status = statusFilter.value;
+  if (status !== 'all') {
+    records = records.filter(r => r.status === status);
+  }
+
+  records.sort((a, b) => {
+    const diff = new Date(a.createdAt) - new Date(b.createdAt);
+    return sortOrder.value === 'newest' ? -diff : diff;
+  });
+
+  return records;
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) +
+    ' · ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderTable() {
+  renderStats();
+
+  const records = getFilteredRecords();
+  tableBody.innerHTML = '';
+
+  if (records.length === 0) {
+    emptyState.hidden = false;
+    return;
+  }
+  emptyState.hidden = true;
+
+  records.forEach(r => {
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+      <td>${escapeHtml(r.fullName)}</td>
+      <td>${escapeHtml(r.mobile)}</td>
+      <td class="issue-cell">${escapeHtml(r.issue || '—')}</td>
+      <td>${formatDate(r.createdAt)}</td>
+      <td>
+        <select class="status-select status-${r.status}" data-id="${r.id}">
+          <option value="new" ${r.status === 'new' ? 'selected' : ''}>New</option>
+          <option value="contacted" ${r.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+          <option value="resolved" ${r.status === 'resolved' ? 'selected' : ''}>Resolved</option>
+        </select>
+      </td>
+      <td>
+        <div class="row-actions">
+          <a class="icon-btn" href="tel:${encodeURIComponent(r.mobile)}" title="Call">📞</a>
+          <a class="icon-btn" href="https://wa.me/91${r.mobile.replace(/\D/g,'')}" target="_blank" title="WhatsApp">💬</a>
+          <button class="icon-btn edit-btn" data-id="${r.id}" title="Edit">✏</button>
+          <button class="icon-btn delete delete-btn" data-id="${r.id}" title="Delete">🗑</button>
+        </div>
+      </td>
+    `;
+
+    tableBody.appendChild(tr);
+  });
+
+  // Status change
+  tableBody.querySelectorAll('.status-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      appointmentsRef.child(sel.dataset.id)
+        .update({ status: sel.value })
+        .catch((err) => alert('Could not update status: ' + err.message));
+    });
+  });
+
+  // Delete
+  tableBody.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!confirm('Delete this appointment? This cannot be undone.')) return;
+      appointmentsRef.child(btn.dataset.id)
+        .remove()
+        .catch((err) => alert('Could not delete: ' + err.message));
+    });
+  });
+
+  // Edit
+  tableBody.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => openEditModal(btn.dataset.id));
+  });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ============================================================
+// EDIT MODAL
+// ============================================================
+function openEditModal(id) {
+  const rec = allRecords.find(r => r.id === id);
+  if (!rec) return;
+
+  editingId = id;
+  editName.value = rec.fullName;
+  editMobile.value = rec.mobile;
+  editIssue.value = rec.issue || '';
+  editModal.hidden = false;
+}
+
+function closeEditModal() {
+  editModal.hidden = true;
+  editingId = null;
+}
+
+cancelEditBtn.addEventListener('click', closeEditModal);
+editModal.addEventListener('click', (e) => {
+  if (e.target === editModal) closeEditModal();
+});
+
+editForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!editingId) return;
+
+  appointmentsRef.child(editingId).update({
+    fullName: editName.value.trim(),
+    mobile: editMobile.value.trim(),
+    issue: editIssue.value.trim()
+  }).catch((err) => alert('Could not save changes: ' + err.message));
+
+  closeEditModal();
+});
+
+// ============================================================
+// SEARCH / FILTER / SORT
+// ============================================================
+searchInput.addEventListener('input', renderTable);
+statusFilter.addEventListener('change', renderTable);
+sortOrder.addEventListener('change', renderTable);
+
+// ============================================================
+// CLEAR ALL
+// ============================================================
+clearAllBtn.addEventListener('click', () => {
+  if (!confirm('Delete ALL appointments? This cannot be undone.')) return;
+  if (allRecords.length === 0) return;
+
+  appointmentsRef.remove()
+    .catch((err) => alert('Could not clear all: ' + err.message));
+});
+
+// ============================================================
+// EXPORT — EXCEL (SheetJS)
+// ============================================================
+exportExcelBtn.addEventListener('click', () => {
+  const records = getFilteredRecords();
+  if (records.length === 0) { alert('No records to export.'); return; }
+
+  const rows = records.map(r => ({
+    Name: r.fullName,
+    Mobile: r.mobile,
+    Issue: r.issue || '',
+    Status: r.status,
+    'Received On': formatDate(r.createdAt)
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Appointments');
+  XLSX.writeFile(workbook, `appointments_${Date.now()}.xlsx`);
+});
+
+// ============================================================
+// EXPORT — PDF (jsPDF + autotable)
+// ============================================================
+exportPdfBtn.addEventListener('click', () => {
+  const records = getFilteredRecords();
+  if (records.length === 0) { alert('No records to export.'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(14);
+  doc.text('Advocate Pratibha Yadav — Appointments', 14, 16);
+
+  const rows = records.map(r => [
+    r.fullName,
+    r.mobile,
+    r.issue || '—',
+    r.status,
+    formatDate(r.createdAt)
+  ]);
+
+  doc.autoTable({
+    startY: 24,
+    head: [['Name', 'Mobile', 'Issue', 'Status', 'Received On']],
+    body: rows,
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [27, 42, 65] }
+  });
+
+  doc.save(`appointments_${Date.now()}.pdf`);
+});
