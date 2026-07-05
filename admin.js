@@ -79,7 +79,10 @@ loginForm.addEventListener('submit', (e) => {
     })
     .catch((err) => {
       console.error(err);
-      loginError.textContent = err.message || 'Incorrect email or password.';
+      // नया अपडेटेड एरर हैंडलिंग (Alert + Error Code)
+      alert("Error Code: " + err.code + "\n\n" + err.message);
+
+      loginError.textContent = err.code + " : " + err.message;
       loginError.hidden = false;
     });
 });
@@ -237,7 +240,6 @@ function renderTable() {
       appointmentsRef.child(sel.dataset.id)
         .update({ status: sel.value })
         .catch((err) => alert('Could not update status: ' + err.message));
-      // No manual re-render needed — the live listener will fire automatically
     });
   });
 
@@ -370,4 +372,3 @@ exportPdfBtn.addEventListener('click', () => {
 
   doc.save(`appointments_${Date.now()}.pdf`);
 });
-      
