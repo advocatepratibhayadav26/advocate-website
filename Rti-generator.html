@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTI आवेदन जनरेटर | Advocate Pratibha Yadav</title>
+<meta name="description" content="मुफ्त में RTI (सूचना का अधिकार) आवेदन तैयार करें और PDF डाउनलोड करें। Advocate Pratibha Yadav द्वारा।">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#1B2A41">
+<link rel="canonical" href="https://advocatepratibhayadav.in/rti-generator.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tools.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark">⚖</span>
+      <div>
+        <h1>Advocate Pratibha Yadav</h1>
+        <p class="brand-sub">Civil Court, Mahmudabad · District Sitapur</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="index.html#posts">Latest Updates</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section tool-section">
+  <p class="eyebrow center">Free Legal Tool</p>
+  <h2 class="section-title center">RTI आवेदन जनरेटर</h2>
+  <p class="tool-intro center">नीचे फॉर्म भरें — सूचना का अधिकार अधिनियम, 2005 के तहत आवेदन अपने आप तैयार हो जाएगा।</p>
+
+  <div class="tool-disclaimer">
+    ℹ️ नियमानुसार आवेदन शुल्क ₹10 है (Postal Order/IPO/Court Fee Stamp द्वारा), जिसे आवेदन के साथ संलग्न करना होगा। BPL श्रेणी के आवेदकों को शुल्क से छूट है।
+  </div>
+
+  <form id="rtiForm" class="generator-form">
+    <label for="rtiApplicantName">आपका पूरा नाम</label>
+    <input id="rtiApplicantName" type="text" required placeholder="जैसे: राम कुमार">
+
+    <label for="rtiApplicantAddress">आपका पता</label>
+    <textarea id="rtiApplicantAddress" rows="2" required placeholder="पूरा पता लिखें"></textarea>
+
+    <label for="rtiApplicantContact">मोबाइल / ईमेल (वैकल्पिक)</label>
+    <input id="rtiApplicantContact" type="text" placeholder="9876543210">
+
+    <label for="rtiDeptName">विभाग / कार्यालय का नाम</label>
+    <input id="rtiDeptName" type="text" required placeholder="जैसे: तहसील कार्यालय, महमूदाबाद">
+
+    <label for="rtiDeptAddress">विभाग का पता (जन सूचना अधिकारी)</label>
+    <textarea id="rtiDeptAddress" rows="2" required placeholder="पूरा पता लिखें"></textarea>
+
+    <label for="rtiInfoSought">आपको कौन सी जानकारी चाहिए</label>
+    <textarea id="rtiInfoSought" rows="6" required placeholder="हर बिंदु नई लाइन में लिखें, जैसे:&#10;1. मेरी शिकायत संख्या XXX पर अब तक क्या कार्यवाही हुई है, उसकी प्रति दें।&#10;2. सम्बंधित फाइल की नोटिंग की प्रति दें।"></textarea>
+
+    <label class="checkbox-row">
+      <input id="rtiIsBPL" type="checkbox"> मैं BPL (गरीबी रेखा से नीचे) श्रेणी में आता/आती हूँ
+    </label>
+
+    <label for="rtiPlace">स्थान</label>
+    <input id="rtiPlace" type="text" required placeholder="जैसे: महमूदाबाद">
+
+    <div class="generator-form-actions">
+      <button type="submit">📄 आवेदन तैयार करें</button>
+    </div>
+  </form>
+
+  <div id="rtiPreviewWrap" hidden>
+    <h3 class="section-title" style="font-size:1.1rem;">Preview</h3>
+    <div id="rtiPreview" class="generator-preview"></div>
+    <div class="generator-form-actions">
+      <button id="rtiDownloadBtn">🖨️ Print / PDF Save करें</button>
+      <button id="rtiEditBtn" class="secondary" type="button">✏️ फिर से बदलें</button>
+    </div>
+  </div>
+</section>
+
+<section class="tool-cta-section">
+  <p>आवेदन तैयार करने के बाद भी सहायता चाहिए?</p>
+  <a href="index.html#appointment" class="btn">📅 Appointment Book करें</a>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span aria-hidden="true">·</span>
+    <a href="disclaimer.html">Disclaimer</a>
+  </div>
+  <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
+</footer>
+
+<script src="rti-generator.js"></script>
+</body>
+</html>
+
