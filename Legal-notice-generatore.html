@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>कानूनी नोटिस जनरेटर | Advocate Pratibha Yadav</title>
+<meta name="description" content="मुफ्त में Legal Notice (कानूनी नोटिस) तैयार करने का टूल। Advocate Pratibha Yadav द्वारा।">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#1B2A41">
+<link rel="canonical" href="https://advocatepratibhayadav.in/legal-notice-generator.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tools.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark">⚖</span>
+      <div>
+        <h1>Advocate Pratibha Yadav</h1>
+        <p class="brand-sub">Civil Court, Mahmudabad · District Sitapur</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="index.html#posts">Latest Updates</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section tool-section">
+  <p class="eyebrow center">Free Legal Tool</p>
+  <h2 class="section-title center">कानूनी नोटिस जनरेटर (Draft)</h2>
+  <p class="tool-intro center">नीचे विवरण भरें — एक शुरुआती Legal Notice draft तैयार होगा। भेजने से पहले कृपया कार्यालय से इसकी समीक्षा जरूर करवाएं।</p>
+
+  <div class="tool-disclaimer">
+    ⚠️ यह केवल एक draft/शुरुआती प्रारूप है, अंतिम कानूनी दस्तावेज़ नहीं। भेजने से पहले Advocate Pratibha Yadav के कार्यालय से जरूर verify करवाएं — <a href="tel:9454337340">9454337340</a>
+  </div>
+
+  <form id="noticeForm" class="generator-form">
+    <label for="ntClientName">क्लाइंट (जिनकी ओर से नोटिस भेजी जा रही है) का नाम</label>
+    <input id="ntClientName" type="text" required placeholder="जैसे: श्री राम कुमार">
+
+    <label for="ntClientAddress">क्लाइंट का पता</label>
+    <textarea id="ntClientAddress" rows="2" required></textarea>
+
+    <label for="ntRecipientName">नोटिस किसे भेजी जा रही है (Recipient)</label>
+    <input id="ntRecipientName" type="text" required placeholder="जैसे: श्री श्याम लाल">
+
+    <label for="ntRecipientAddress">Recipient का पता</label>
+    <textarea id="ntRecipientAddress" rows="2" required></textarea>
+
+    <label for="ntSubject">विषय (Subject)</label>
+    <input id="ntSubject" type="text" required placeholder="जैसे: बकाया राशि रु. 50,000/- की वसूली हेतु">
+
+    <label for="ntFacts">मामले के तथ्य (Facts)</label>
+    <textarea id="ntFacts" rows="5" required placeholder="घटना/मामले का पूरा विवरण यहाँ लिखें"></textarea>
+
+    <label for="ntLegalGround">कानूनी आधार (वैकल्पिक — अधिवक्ता के साथ तय करें)</label>
+    <input id="ntLegalGround" type="text" placeholder="जैसे: धारा 138, Negotiable Instruments Act">
+    <p class="field-hint">सही धारा हमेशा अधिवक्ता से पुष्टि करके ही लिखें।</p>
+
+    <label for="ntDemand">मांग / राहत (Demand)</label>
+    <textarea id="ntDemand" rows="3" required placeholder="जैसे: उपरोक्त राशि का भुगतान करें"></textarea>
+
+    <label for="ntDays">अनुपालन हेतु कितने दिन का समय दें</label>
+    <input id="ntDays" type="number" value="15" min="1" required>
+
+    <label for="ntPlace">स्थान</label>
+    <input id="ntPlace" type="text" required placeholder="जैसे: महमूदाबाद">
+
+    <div class="generator-form-actions">
+      <button type="submit">📄 नोटिस तैयार करें</button>
+    </div>
+  </form>
+
+  <div id="noticePreviewWrap" hidden>
+    <h3 class="section-title" style="font-size:1.1rem;">Preview</h3>
+    <div id="noticePreview" class="generator-preview"></div>
+    <div class="generator-form-actions">
+      <button id="noticeDownloadBtn">🖨️ Print / PDF Save करें</button>
+      <button id="noticeEditBtn" class="secondary" type="button">✏️ फिर से बदलें</button>
+    </div>
+  </div>
+</section>
+
+<section class="tool-cta-section">
+  <p>नोटिस भेजने से पहले जरूर समीक्षा करवाएं</p>
+  <a href="index.html#appointment" class="btn">📅 Appointment Book करें</a>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span aria-hidden="true">·</span>
+    <a href="disclaimer.html">Disclaimer</a>
+  </div>
+  <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
+</footer>
+
+<script src="legal-notice-generator.js"></script>
+</body>
+</html>
+
