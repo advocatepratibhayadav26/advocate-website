@@ -69,6 +69,7 @@
       <a href="#reviews">Reviews</a>
       <a href="#faq">FAQ</a>
       <a href="#appointment">Appointment</a>
+      <a href="#posts">Latest Updates</a>
       <a href="#contact">Contact</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
@@ -227,6 +228,23 @@
   </div>
 </section>
 
+<section id="posts" class="section">
+  <p class="eyebrow center">Latest Updates</p>
+  <h2 class="section-title center">Legal News & Office Updates</h2>
+
+  <div class="posts-controls">
+    <input id="postSearch" type="text" placeholder="🔍 Search updates…" class="post-search-input">
+    <select id="postCategoryFilter" class="post-filter-select">
+      <option value="all">All Categories</option>
+    </select>
+  </div>
+
+  <div id="postsContainer" class="card-grid posts-grid">
+    <!-- Posts automatically appear here -->
+  </div>
+  <p id="postsEmpty" class="empty-state" hidden>No updates posted yet. Please check back soon.</p>
+</section>
+
 <section id="contact" class="section contact-section">
   <p class="eyebrow center">Get in Touch</p>
   <h2 class="section-title center">Contact the Office</h2>
@@ -293,5 +311,6 @@ const database = firebase.database();
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="script.js"></script>
+<script src="posts.js"></script>
 </body>
 </html>
