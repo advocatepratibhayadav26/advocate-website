@@ -45,6 +45,22 @@
     document.getElementById('postPageTitle').textContent = document.title;
 
     const pageUrl = window.location.origin + window.location.pathname + '?id=' + encodeURIComponent(id);
+    const plainExcerpt = (post.content || '').slice(0, 155).trim();
+
+    const metaDesc = document.getElementById('postMetaDescription');
+    if (metaDesc) metaDesc.setAttribute('content', plainExcerpt || document.title);
+
+    const canonical = document.getElementById('postCanonical');
+    if (canonical) canonical.setAttribute('href', pageUrl);
+
+    const ogTitle = document.getElementById('postOgTitle');
+    if (ogTitle) ogTitle.setAttribute('content', document.title);
+
+    const ogDesc = document.getElementById('postOgDescription');
+    if (ogDesc) ogDesc.setAttribute('content', plainExcerpt || document.title);
+
+    injectSchema(id, post, pageUrl, plainExcerpt);
+
     const whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent((post.title || 'Latest Update') + ' — ' + pageUrl);
     const facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl);
 
@@ -61,5 +77,39 @@
         <a href="${facebookUrl}" target="_blank" class="share-btn share-facebook">📘 Facebook</a>
       </div>
     `;
+  }
+
+  function injectSchema(id, post, pageUrl, plainExcerpt) {
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": post.title || 'Latest Update',
+      "description": plainExcerpt || post.title || '',
+      "datePublished": post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+      "image": post.imageUrl || undefined,
+      "url": pageUrl,
+      "author": { "@type": "Person", "name": "Advocate Pratibha Yadav" },
+      "publisher": { "@type": "LegalService", "name": "Advocate Pratibha Yadav" }
+    };
+
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://advocatepratibhayadav.in/" },
+        { "@type": "ListItem", "position": 2, "name": "Latest Updates", "item": "https://advocatepratibhayadav.in/index.html#posts" },
+        { "@type": "ListItem", "position": 3, "name": post.title || 'Update', "item": pageUrl }
+      ]
+    };
+
+    addJsonLd(articleSchema);
+    addJsonLd(breadcrumbSchema);
+  }
+
+  function addJsonLd(obj) {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(obj);
+    document.head.appendChild(script);
   }
 })();
