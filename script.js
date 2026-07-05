@@ -19,7 +19,7 @@ if (navToggle && mainNav) {
   });
 }
 
-// Appointment form -> sends email via EmailJS, then opens WhatsApp with the details
+// Appointment form -> saves to Firebase, sends email via EmailJS, then opens WhatsApp
 const appointmentForm = document.getElementById('appointmentForm');
 
 if (appointmentForm) {
@@ -28,22 +28,29 @@ if (appointmentForm) {
   appointmentForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
+    const submitBtn = appointmentForm.querySelector('button[type="submit"]');
     const fullName = document.getElementById('fullName').value.trim();
     const mobile = document.getElementById('mobile').value.trim();
     const issue = document.getElementById('issue').value.trim();
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Booking…';
+    }
+
+    // Save to Firebase first so the appointment is never lost even if
+    // email/WhatsApp steps have an issue.
+    saveAppointmentRecord(fullName, mobile, issue)
+      .catch((err) => {
+        console.error('Firebase save failed:', err);
+        showFormStatus('error', 'Could not save your appointment. Please call us directly at 9454337340.');
+      });
 
     emailjs.send('service_kit0x37', 'template_cmg5qlq', {
       fullName: fullName,
       mobile: mobile,
       issue: issue
     }).then(function () {
-
-      // बदलाव: EmailJS सक्सेस होने पर सबसे पहले अलर्ट दिखेगा
-      alert("EmailJS Success");
-
-      // Save a copy locally so it shows up in admin.html
-      saveAppointmentRecord(fullName, mobile, issue);
-
       const message =
         `New Appointment\n\n` +
         `Name: ${fullName}\n` +
@@ -51,23 +58,39 @@ if (appointmentForm) {
         `Issue: ${issue || 'Not specified'}`;
 
       window.open(
-        'https://wa.me/919454337340?text=' + encodeURIComponent(message), 
+        'https://wa.me/919454337340?text=' + encodeURIComponent(message),
         '_blank'
       );
 
+      showFormStatus('success', 'Appointment booked! Opening WhatsApp…');
+      appointmentForm.reset();
     }, function (error) {
-      alert('Email Error: ' + JSON.stringify(error));
+      console.error('EmailJS error:', error);
+      showFormStatus('error', 'Your appointment was saved, but the confirmation email failed. We will still contact you.');
+    }).finally(function () {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💬 Book via WhatsApp';
+      }
     });
   });
 }
 
+function showFormStatus(type, message) {
+  let statusEl = document.getElementById('appointmentStatus');
+  if (!statusEl) {
+    statusEl = document.createElement('p');
+    statusEl.id = 'appointmentStatus';
+    appointmentForm.appendChild(statusEl);
+  }
+  statusEl.className = 'form-status ' + type;
+  statusEl.textContent = message;
+}
+
 // Save a submitted appointment to Firebase Realtime Database (shared, cross-device — feeds admin.html).
 // Falls back to localStorage only if the database isn't reachable/configured,
-// so a form submission never fails just because of this.
+// so a form submission never fails just because of this. Returns a Promise.
 function saveAppointmentRecord(fullName, mobile, issue) {
-  // फ़ंक्शन कॉल होते ही सबसे पहले अलर्ट दिखेगा
-  alert("saveAppointmentRecord Called");
-
   const record = {
     fullName: fullName,
     mobile: mobile,
@@ -76,17 +99,13 @@ function saveAppointmentRecord(fullName, mobile, issue) {
   };
 
   if (typeof database !== 'undefined' && database) {
-    database.ref('appointments').push({
+    return database.ref('appointments').push({
       ...record,
       createdAt: firebase.database.ServerValue.TIMESTAMP
-    }).then(function () {
-      alert("Firebase Save Success");
-    }).catch(function (err) {
-      alert("Firebase Error:\n" + err.code + "\n" + err.message);
-      console.error(err);
     });
   } else {
     saveToLocalStorage(record);
+    return Promise.resolve();
   }
 }
 
