@@ -70,12 +70,15 @@ function saveAppointmentRecord(fullName, mobile, issue) {
   };
 
   if (typeof database !== 'undefined' && database) {
+    // नया अपडेटेड Firebase सेव और एरर अलर्ट ब्लॉक
     database.ref('appointments').push({
       ...record,
       createdAt: firebase.database.ServerValue.TIMESTAMP
+    }).then(function () {
+      alert("Firebase Save Success");
     }).catch(function (err) {
-      console.error('Realtime Database save failed, saving locally instead:', err);
-      saveToLocalStorage(record);
+      alert("Firebase Error:\n" + err.code + "\n" + err.message);
+      console.error(err);
     });
   } else {
     saveToLocalStorage(record);
