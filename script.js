@@ -38,6 +38,9 @@ if (appointmentForm) {
       issue: issue
     }).then(function () {
 
+      // Save a copy locally so it shows up in admin.html
+      saveAppointmentRecord(fullName, mobile, issue);
+
       const message =
         `New Appointment\n\n` +
         `Name: ${fullName}\n` +
@@ -53,4 +56,47 @@ if (appointmentForm) {
       alert('Email Error: ' + JSON.stringify(error));
     });
   });
+}
+
+// Save a submitted appointment to Firebase Realtime Database (shared, cross-device — feeds admin.html).
+// Falls back to localStorage only if the database isn't reachable/configured,
+// so a form submission never fails just because of this.
+function saveAppointmentRecord(fullName, mobile, issue) {
+  const record = {
+    fullName: fullName,
+    mobile: mobile,
+    issue: issue,
+    status: 'new' // new | contacted | resolved
+  };
+
+  if (typeof database !== 'undefined' && database) {
+    database.ref('appointments').push({
+      ...record,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    }).catch(function (err) {
+      console.error('Realtime Database save failed, saving locally instead:', err);
+      saveToLocalStorage(record);
+    });
+  } else {
+    saveToLocalStorage(record);
+  }
+}
+
+function saveToLocalStorage(record) {
+  const STORAGE_KEY = 'pyadav_appointments';
+  let records = [];
+
+  try {
+    records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (err) {
+    records = [];
+  }
+
+  records.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    createdAt: new Date().toISOString(),
+    ...record
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
