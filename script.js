@@ -1,3 +1,29 @@
+// Page loading animation — hide once everything is ready
+window.addEventListener('load', () => {
+  const loader = document.getElementById('pageLoader');
+  if (loader) {
+    loader.classList.add('page-loader-hide');
+    setTimeout(() => loader.remove(), 500);
+  }
+});
+
+// Scroll-reveal animation for sections
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+} else {
+  // Fallback: show everything immediately on unsupported browsers
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+}
+
 // Mobile hamburger menu
 const navToggle = document.getElementById('navToggle');
 const mainNav = document.getElementById('mainNav');
