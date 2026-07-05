@@ -4,6 +4,7 @@
 // Create the admin's login in Firebase Console → Authentication →
 // Sign-in method → enable "Email/Password" → Users → Add user.
 // ============================================================
+alert("admin.js Loaded");
 const auth = firebase.auth();
 
 // ============================================================
