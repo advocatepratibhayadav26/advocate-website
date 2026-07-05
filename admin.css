@@ -55,6 +55,10 @@ body[data-theme="dark"] .admin-brand h1{ color: var(--brass); }
 
 *{ box-sizing: border-box; }
 
+[hidden]{
+  display: none !important;
+}
+
 body{
   margin:0;
   font-family: var(--sans);
