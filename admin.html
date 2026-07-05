@@ -3,60 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Admin Dashboard | Advocate Pratibha Yadav</title>
-
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%231B2A41'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%23C9A45C'%3E%E2%9A%96%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
-
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
 </head>
+<body data-theme="light">
 
-<body>
+<!-- ===== LOGIN SCREEN ===== -->
+<section id="loginScreen" class="login-screen">
+  <form id="loginForm" class="login-card">
+    <span class="login-mark">⚖</span>
+    <h1>Admin Login</h1>
+    <p class="login-sub">Advocate Pratibha Yadav — Office Dashboard</p>
 
-<h1>Admin Dashboard</h1>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" required>
 
-<div id="stats">
-    <h3>Total Appointments:
-        <span id="totalAppointments">0</span>
-    </h3>
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" required>
+
+    <p id="loginError" class="login-error" hidden>Incorrect email or password.</p>
+
+    <button type="submit">Log In</button>
+  </form>
+</section>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard" class="dashboard" hidden>
+
+  <header class="admin-header">
+    <div class="admin-brand">
+      <span class="brand-mark">⚖</span>
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p class="brand-sub">Advocate Pratibha Yadav · Appointments</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle" title="Toggle theme">🌙 Dark Gold</button>
+      <button id="logoutBtn" class="logout-btn">Log Out</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- Stats -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-value" id="statTotal">0</p>
+        <p class="stat-label">Total Appointments</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-value" id="statToday">0</p>
+        <p class="stat-label">Today</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-value" id="statWeek">0</p>
+        <p class="stat-label">This Week</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-value" id="statNew">0</p>
+        <p class="stat-label">Awaiting Contact</p>
+      </div>
+    </section>
+
+    <!-- Search + Filters -->
+    <section class="controls-bar">
+      <input id="searchInput" type="text" placeholder="🔍 Search by name, mobile, or issue…" class="search-input">
+
+      <select id="statusFilter" class="filter-select">
+        <option value="all">All Statuses</option>
+        <option value="new">New</option>
+        <option value="contacted">Contacted</option>
+        <option value="resolved">Resolved</option>
+      </select>
+
+      <select id="sortOrder" class="filter-select">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+
+      <button id="exportExcelBtn" class="secondary-btn">📊 Export Excel</button>
+      <button id="exportPdfBtn" class="secondary-btn">📄 Export PDF</button>
+      <button id="clearAllBtn" class="danger-btn">🗑 Clear All</button>
+    </section>
+
+    <!-- Appointments Table -->
+    <section class="table-wrap">
+      <table id="appointmentsTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Issue</th>
+            <th>Received</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by admin.js -->
+        </tbody>
+      </table>
+      <p id="emptyState" class="empty-state" hidden>No appointments found.</p>
+    </section>
+
+  </main>
 </div>
 
-<table border="1" width="100%">
-<thead>
-<tr>
-<th>Name</th>
-<th>Mobile</th>
-<th>Issue</th>
-<th>Status</th>
-<th>Date</th>
-</tr>
-</thead>
+<!-- ===== EDIT MODAL ===== -->
+<div id="editModal" class="modal-overlay" hidden>
+  <form id="editForm" class="modal-card">
+    <h2>Edit Appointment</h2>
 
-<tbody id="appointmentTable">
+    <label for="editName">Full Name</label>
+    <input id="editName" type="text" required>
 
-</tbody>
+    <label for="editMobile">Mobile Number</label>
+    <input id="editMobile" type="tel" pattern="[0-9]{10}" required>
 
-</table>
+    <label for="editIssue">Legal Issue</label>
+    <textarea id="editIssue" rows="4"></textarea>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyClCRUp9qqJ1dPR_hCG5zxKG_T5ypVGXqc",
-  authDomain: "advocate-pratibha-yadav.firebaseapp.com",
-  databaseURL: "https://advocate-pratibha-yadav-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "advocate-pratibha-yadav",
-  storageBucket: "advocate-pratibha-yadav.firebasestorage.app",
-  messagingSenderId: "737527211054",
-  appId: "1:737527211054:web:55ac7b0559983ac20d2bbf",
-  measurementId: "G-J7GD1Y9E70"
-};
+    <div class="modal-actions">
+      <button type="button" id="cancelEditBtn" class="secondary-btn ghost">Cancel</button>
+      <button type="submit" class="secondary-btn">Save Changes</button>
+    </div>
+  </form>
+</div>
 
-firebase.initializeApp(firebaseConfig);
+<!-- Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
-const database = firebase.database();
-</script>
+<!-- Firebase (Auth + Realtime Database) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <script src="admin.js"></script>
-
 </body>
 </html>
