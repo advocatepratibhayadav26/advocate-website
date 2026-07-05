@@ -62,6 +62,8 @@ if (appointmentForm) {
 // Falls back to localStorage only if the database isn't reachable/configured,
 // so a form submission never fails just because of this.
 function saveAppointmentRecord(fullName, mobile, issue) {
+  alert("saveAppointmentRecord Called");
+
   const record = {
     fullName: fullName,
     mobile: mobile,
@@ -70,7 +72,6 @@ function saveAppointmentRecord(fullName, mobile, issue) {
   };
 
   if (typeof database !== 'undefined' && database) {
-    // नया अपडेटेड Firebase सेव और एरर अलर्ट ब्लॉक
     database.ref('appointments').push({
       ...record,
       createdAt: firebase.database.ServerValue.TIMESTAMP
