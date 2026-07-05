@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPC से BNS धारा खोजें | Advocate Pratibha Yadav</title>
+<meta name="description" content="IPC (भारतीय दंड संहिता) की धारा को नई BNS (भारतीय न्याय संहिता) धारा में खोजें — मुफ्त टूल, Advocate Pratibha Yadav द्वारा।">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#1B2A41">
+<link rel="canonical" href="https://advocatepratibhayadav.in/ipc-bns.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tools.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark">⚖</span>
+      <div>
+        <h1>Advocate Pratibha Yadav</h1>
+        <p class="brand-sub">Civil Court, Mahmudabad · District Sitapur</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="index.html#posts">Latest Updates</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section tool-section">
+  <p class="eyebrow center">Free Legal Tool</p>
+  <h2 class="section-title center">IPC से BNS धारा खोजें</h2>
+  <p class="tool-intro center">1 जुलाई 2024 से भारतीय दंड संहिता (IPC) की जगह भारतीय न्याय संहिता (BNS) लागू है। पुरानी धारा नंबर डालकर नई धारा जानें।</p>
+
+  <div class="tool-disclaimer">
+    ⚠️ यह सूची केवल सबसे ज़्यादा पूछी जाने वाली धाराओं की है, संपूर्ण नहीं। किसी भी कानूनी कार्यवाही से पहले कृपया कार्यालय से सम्पर्क कर पुष्टि करें।
+  </div>
+
+  <input id="ipcSearchInput" type="text" class="tool-search-input" placeholder="🔍 धारा नंबर या अपराध लिखें (जैसे: 302, चोरी, cheating)">
+
+  <div id="ipcResults" class="ipc-results"></div>
+  <p id="ipcNoResults" class="empty-state" hidden>यह धारा हमारी सूची में नहीं मिली। कृपया कार्यालय से सीधे सम्पर्क करें — <a href="tel:9454337340">9454337340</a></p>
+</section>
+
+<section class="tool-cta-section">
+  <p>अपने मामले पर विस्तार से सलाह चाहिए?</p>
+  <a href="index.html#appointment" class="btn">📅 Appointment Book करें</a>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span aria-hidden="true">·</span>
+    <a href="disclaimer.html">Disclaimer</a>
+  </div>
+  <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
+</footer>
+
+<script src="ipc-bns-data.js"></script>
+<script>
+const input = document.getElementById('ipcSearchInput');
+const resultsEl = document.getElementById('ipcResults');
+const noResultsEl = document.getElementById('ipcNoResults');
+
+function render(list) {
+  resultsEl.innerHTML = '';
+  if (list.length === 0) {
+    noResultsEl.hidden = false;
+    return;
+  }
+  noResultsEl.hidden = true;
+  list.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'ipc-card';
+    card.innerHTML = `
+      <div class="ipc-card-nums">
+        <span class="ipc-old">IPC ${item.ipc}</span>
+        <span class="ipc-arrow">→</span>
+        <span class="ipc-new">BNS ${item.bns}</span>
+      </div>
+      <p class="ipc-offence">${item.offence} <span class="ipc-hindi">— ${item.hindi}</span></p>
+      <p class="ipc-desc">${item.desc}</p>
+    `;
+    resultsEl.appendChild(card);
+  });
+}
+
+render(IPC_BNS_DATA);
+
+input.addEventListener('input', () => {
+  const q = input.value.trim().toLowerCase();
+  if (!q) { render(IPC_BNS_DATA); return; }
+  const filtered = IPC_BNS_DATA.filter(item =>
+    item.ipc.toLowerCase().includes(q) ||
+    item.bns.toLowerCase().includes(q) ||
+    item.offence.toLowerCase().includes(q) ||
+    item.hindi.includes(q) ||
+    item.desc.includes(q)
+  );
+  render(filtered);
+});
+</script>
+</body>
+</html>
+
