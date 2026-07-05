@@ -736,11 +736,4 @@ footer{
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  gap: 2px;
-  padding: 10px 4px 8px;
-  font-size: 1.15rem;
-  color: var(--navy);
-}
-.sticky-bar-btn span{ font-size: 0.68rem; font-weight:600; }
-.sticky-bar-btn-primary{ background: var(--brass); color: var(--navy-deep); }
+  justify-content:center
