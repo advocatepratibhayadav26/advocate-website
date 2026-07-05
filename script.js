@@ -38,6 +38,9 @@ if (appointmentForm) {
       issue: issue
     }).then(function () {
 
+      // बदलाव: EmailJS सक्सेस होने पर सबसे पहले अलर्ट दिखेगा
+      alert("EmailJS Success");
+
       // Save a copy locally so it shows up in admin.html
       saveAppointmentRecord(fullName, mobile, issue);
 
@@ -47,10 +50,10 @@ if (appointmentForm) {
         `Mobile: ${mobile}\n` +
         `Issue: ${issue || 'Not specified'}`;
 
-      window.open('https://wa.me/919454337340?text=' + encodeURIComponent(message), '_blank');
-
-      alert('Appointment Submitted Successfully!');
-      appointmentForm.reset();
+      window.open(
+        'https://wa.me/919454337340?text=' + encodeURIComponent(message), 
+        '_blank'
+      );
 
     }, function (error) {
       alert('Email Error: ' + JSON.stringify(error));
@@ -62,6 +65,7 @@ if (appointmentForm) {
 // Falls back to localStorage only if the database isn't reachable/configured,
 // so a form submission never fails just because of this.
 function saveAppointmentRecord(fullName, mobile, issue) {
+  // फ़ंक्शन कॉल होते ही सबसे पहले अलर्ट दिखेगा
   alert("saveAppointmentRecord Called");
 
   const record = {
