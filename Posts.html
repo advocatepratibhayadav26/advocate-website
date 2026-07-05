@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="postPageTitle">Latest Update | Advocate Pratibha Yadav</title>
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#1B2A41">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%231B2A41'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%23C9A45C'%3E%E2%9A%96%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark">⚖</span>
+      <div>
+        <h1>Advocate Pratibha Yadav</h1>
+        <p class="brand-sub">Civil Court, Mahmudabad · District Sitapur</p>
+      </div>
+    </div>
+    <nav id="mainNav">
+      <a href="index.html">Home</a>
+      <a href="index.html#posts">Latest Updates</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section post-detail-section">
+  <div id="postDetail" class="post-detail">
+    <p>Loading…</p>
+  </div>
+  <p id="postNotFound" class="empty-state" hidden>This update could not be found. It may have been removed.</p>
+  <a href="index.html#posts" class="btn2 post-back-link">← Back to Latest Updates</a>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span aria-hidden="true">·</span>
+    <a href="disclaimer.html">Disclaimer</a>
+  </div>
+  <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
+  <p>Civil Court, Mahmudabad • District Sitapur • Uttar Pradesh</p>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyClCRUp9qqJ1dPR_hCG5zxKG_T5ypVGXqc",
+  authDomain: "advocate-pratibha-yadav.firebaseapp.com",
+  databaseURL: "https://advocate-pratibha-yadav-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "advocate-pratibha-yadav",
+  storageBucket: "advocate-pratibha-yadav.firebasestorage.app",
+  messagingSenderId: "737527211054",
+  appId: "1:737527211054:web:55ac7b0559983ac20d2bbf",
+  measurementId: "G-J7GD1Y9E70"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+</script>
+<script src="post.js"></script>
+</body>
+</html>
