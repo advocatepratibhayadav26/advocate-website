@@ -4,7 +4,6 @@
 // Create the admin's login in Firebase Console → Authentication →
 // Sign-in method → enable "Email/Password" → Users → Add user.
 // ============================================================
-alert("admin.js Loaded");
 const auth = firebase.auth();
 
 // ============================================================
@@ -80,16 +79,30 @@ loginForm.addEventListener('submit', (e) => {
     })
     .catch((err) => {
       console.error(err);
-      // नया अपडेटेड एरर हैंडलिंग (Alert + Error Code)
-      alert("Error Code: " + err.code + "\n\n" + err.message);
-
-      loginError.textContent = err.code + " : " + err.message;
+      loginError.textContent = 'Login failed: ' + (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
+        ? 'Incorrect email or password.'
+        : err.message);
       loginError.hidden = false;
     });
 });
 
 logoutBtn.addEventListener('click', () => {
   auth.signOut();
+});
+
+// ============================================================
+// TABS (Appointments / Manage Posts)
+// ============================================================
+document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-panel').forEach(p => { p.hidden = true; p.classList.remove('active'); });
+
+    btn.classList.add('active');
+    const panel = document.getElementById(btn.dataset.tab);
+    panel.hidden = false;
+    panel.classList.add('active');
+  });
 });
 
 // ============================================================
