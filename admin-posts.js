@@ -22,6 +22,27 @@
   const postCancelEditBtn = document.getElementById('postCancelEditBtn');
   const postFormStatus = document.getElementById('postFormStatus');
 
+  const seoToggleBtn = document.getElementById('seoToggleBtn');
+  const seoFieldsWrap = document.getElementById('seoFieldsWrap');
+  const postSlug = document.getElementById('postSlug');
+  const postMetaTitle = document.getElementById('postMetaTitle');
+  const postMetaDescription = document.getElementById('postMetaDescription');
+  const postFocusKeywords = document.getElementById('postFocusKeywords');
+  const postImageAlt = document.getElementById('postImageAlt');
+  const postCanonicalUrl = document.getElementById('postCanonicalUrl');
+  const postTags = document.getElementById('postTags');
+  const postAuthorName = document.getElementById('postAuthorName');
+  const postPublishDate = document.getElementById('postPublishDate');
+  const metaTitleCount = document.getElementById('metaTitleCount');
+  const metaDescCount = document.getElementById('metaDescCount');
+  const seoScoreValue = document.getElementById('seoScoreValue');
+  const seoScoreBar = document.getElementById('seoScoreBar');
+  const seoScoreChecklist = document.getElementById('seoScoreChecklist');
+
+  let slugManuallyEdited = false;
+  postPublishDate.value = new Date().toISOString().slice(0, 10);
+  updateCounters();
+
   const adminPostsList = document.getElementById('adminPostsList');
   const postsEmptyState = document.getElementById('postsEmptyState');
 
@@ -32,7 +53,86 @@
   const MAX_IMAGE_WIDTH = 900;
   const IMAGE_QUALITY = 0.72;
 
-  // ---------- Live list of posts ----------
+  // ---------- SEO panel toggle ----------
+  seoToggleBtn.addEventListener('click', () => {
+    seoFieldsWrap.hidden = !seoFieldsWrap.hidden;
+    seoToggleBtn.textContent = seoFieldsWrap.hidden ? '🔍 SEO Settings (Advanced) ▾' : '🔍 SEO Settings (Advanced) ▴';
+  });
+
+  // ---------- Slug auto-generate from title ----------
+  function slugify(text) {
+    return (text || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  postTitle.addEventListener('input', () => {
+    if (!slugManuallyEdited) {
+      postSlug.value = slugify(postTitle.value);
+    }
+    updateSeoScore();
+  });
+
+  postSlug.addEventListener('input', () => {
+    slugManuallyEdited = true;
+    updateSeoScore();
+  });
+
+  // ---------- Live character counters ----------
+  function updateCounters() {
+    const titleLen = postMetaTitle.value.length;
+    metaTitleCount.textContent = `${titleLen} / 60 characters (ideal)`;
+    metaTitleCount.style.color = titleLen > 60 ? '#c0392b' : '';
+
+    const descLen = postMetaDescription.value.length;
+    metaDescCount.textContent = `${descLen} / 160 characters (ideal)`;
+    metaDescCount.style.color = descLen > 160 ? '#c0392b' : '';
+  }
+  [postMetaTitle, postMetaDescription].forEach(el => el.addEventListener('input', () => { updateCounters(); updateSeoScore(); }));
+  [postCategory, postContent, postFocusKeywords, postImageAlt].forEach(el => el.addEventListener('input', updateSeoScore));
+
+  // ---------- Live SEO Score (Yoast-style checklist) ----------
+  function updateSeoScore() {
+    const checks = [];
+    const title = postTitle.value.trim();
+    const metaTitle = postMetaTitle.value.trim() || title;
+    const metaDesc = postMetaDescription.value.trim();
+    const content = postContent.value.trim();
+    const keywords = postFocusKeywords.value.trim().split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
+    const mainKeyword = keywords[0] || '';
+    const slug = postSlug.value.trim();
+    const imgAlt = postImageAlt.value.trim();
+
+    checks.push({ label: 'Title likha gaya hai', pass: title.length > 0 });
+    checks.push({ label: 'Meta Title 60 characters ke andar hai', pass: metaTitle.length > 0 && metaTitle.length <= 60 });
+    checks.push({ label: 'Meta Description 120-160 characters mein hai', pass: metaDesc.length >= 120 && metaDesc.length <= 160 });
+    checks.push({ label: 'URL Slug diya gaya hai', pass: slug.length > 0 });
+    checks.push({ label: 'Content kam se kam 300 characters ka hai', pass: content.length >= 300 });
+    checks.push({ label: 'Focus Keyword diya gaya hai', pass: mainKeyword.length > 0 });
+    checks.push({ label: 'Focus Keyword Title mein hai', pass: mainKeyword && title.toLowerCase().includes(mainKeyword) });
+    checks.push({ label: 'Focus Keyword Meta Description mein hai', pass: mainKeyword && metaDesc.toLowerCase().includes(mainKeyword) });
+    checks.push({ label: 'Focus Keyword Content mein hai', pass: mainKeyword && content.toLowerCase().includes(mainKeyword) });
+    checks.push({ label: 'Image Alt Text diya gaya hai', pass: imgAlt.length > 0 });
+
+    const passCount = checks.filter(c => c.pass).length;
+    const score = Math.round((passCount / checks.length) * 100);
+
+    seoScoreValue.textContent = `${score} / 100`;
+    seoScoreBar.style.width = score + '%';
+    seoScoreBar.style.background = score >= 80 ? '#2e7d32' : score >= 50 ? '#d9a441' : '#c0392b';
+
+    seoScoreChecklist.innerHTML = checks.map(c =>
+      `<li class="${c.pass ? 'pass' : 'fail'}">${c.label}</li>`
+    ).join('');
+
+    return score;
+  }
+
+
   postsRef.on('value', (snapshot) => {
     const data = snapshot.val() || {};
     allAdminPosts = Object.keys(data).map((key) => ({ id: key, ...data[key] }));
@@ -58,7 +158,7 @@
         ${p.imageUrl ? `<img src="${escapeHtml(p.imageUrl)}" class="admin-post-thumb" alt="">` : '<div class="admin-post-thumb admin-post-thumb-empty">🖼️</div>'}
         <div class="admin-post-info">
           <p class="admin-post-title">${p.pinned ? '📌 ' : ''}${escapeHtml(p.title || '')}</p>
-          <p class="admin-post-meta">${escapeHtml(p.category || '')} · ${p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-IN') : ''}</p>
+          <p class="admin-post-meta">${escapeHtml(p.category || '')} · ${p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-IN') : ''} ${p.seoScore !== undefined ? `· SEO: <b class="${p.seoScore >= 80 ? 'seo-good' : p.seoScore >= 50 ? 'seo-ok' : 'seo-bad'}">${p.seoScore}/100</b>` : ''}</p>
         </div>
         <div class="row-actions">
           <button class="icon-btn pin-btn" data-id="${p.id}" title="${p.pinned ? 'Unpin' : 'Pin'}">📌</button>
@@ -106,6 +206,19 @@
     postPin.checked = !!post.pinned;
     postPdfUrl.value = post.pdfUrl || '';
 
+    postSlug.value = post.slug || '';
+    slugManuallyEdited = !!post.slug;
+    postMetaTitle.value = post.metaTitle || '';
+    postMetaDescription.value = post.metaDescription || '';
+    postFocusKeywords.value = post.focusKeywords || '';
+    postImageAlt.value = post.imageAlt || '';
+    postCanonicalUrl.value = post.canonicalUrl || '';
+    postTags.value = post.tags || '';
+    postAuthorName.value = post.authorName || 'Advocate Pratibha Yadav';
+    postPublishDate.value = post.publishDate || '';
+    updateCounters();
+    updateSeoScore();
+
     existingImageUrl = post.imageUrl || '';
     pendingImageBase64 = null;
 
@@ -130,6 +243,11 @@
     postImagePreview.hidden = true;
     existingImageUrl = '';
     pendingImageBase64 = null;
+    slugManuallyEdited = false;
+    postAuthorName.value = 'Advocate Pratibha Yadav';
+    postPublishDate.value = new Date().toISOString().slice(0, 10);
+    updateCounters();
+    updateSeoScore();
   }
 
   // ---------- Image select -> resize + compress -> base64 ----------
@@ -191,7 +309,17 @@
         content: postContent.value.trim(),
         pinned: !!postPin.checked,
         imageUrl: imageUrl,
-        pdfUrl: postPdfUrl.value.trim()
+        pdfUrl: postPdfUrl.value.trim(),
+        slug: postSlug.value.trim(),
+        metaTitle: postMetaTitle.value.trim(),
+        metaDescription: postMetaDescription.value.trim(),
+        focusKeywords: postFocusKeywords.value.trim(),
+        imageAlt: postImageAlt.value.trim(),
+        canonicalUrl: postCanonicalUrl.value.trim(),
+        tags: postTags.value.trim(),
+        authorName: postAuthorName.value.trim() || 'Advocate Pratibha Yadav',
+        publishDate: postPublishDate.value || new Date().toISOString().slice(0, 10),
+        seoScore: updateSeoScore()
       };
 
       if (editingPostId.value) {
