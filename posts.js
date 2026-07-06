@@ -92,7 +92,7 @@
           <h3 class="post-title">${escapeHtml(p.title || '')}</h3>
           <p class="post-date">${formatDate(p.createdAt)}</p>
           <p class="post-excerpt">${escapeHtml(excerpt(p.content, 140))}</p>
-          <a class="post-readmore" href="post.html?id=${encodeURIComponent(p.id)}">Read More →</a>
+          <a class="post-readmore" href="post.html?${p.slug ? 'post=' + encodeURIComponent(p.slug) : 'id=' + encodeURIComponent(p.id)}">Read More →</a>
         </div>
       `;
       postsContainer.appendChild(card);
@@ -108,4 +108,3 @@
     return div.innerHTML;
   }
 })();
-
