@@ -453,3 +453,48 @@ progress{ width:100%; margin-top:8px; height: 8px; }
   display:flex; align-items:center; justify-content:center;
 }
 .admin-gallery-caption{ font-size: 0.75rem; padding: 6px 8px; margin:0; color: var(--ink-soft); }
+
+/* ===== SEO Fields Section ===== */
+.seo-toggle-btn{
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px dashed rgba(27,42,65,0.3);
+  background: #fff;
+  color: var(--navy);
+  font-weight:600;
+  font-size: 0.85rem;
+  cursor:pointer;
+  text-align:left;
+}
+.seo-fields-wrap{
+  margin-top: 14px;
+  padding: 18px 16px;
+  background: rgba(201,164,92,0.06);
+  border: 1px solid rgba(201,164,92,0.3);
+  border-radius: var(--radius);
+}
+.seo-fields-hint{
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin: 0 0 10px;
+  font-weight:400;
+  line-height:1.5;
+}
+.seo-score-box{
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid rgba(27,42,65,0.12);
+}
+.seo-score-label{ font-size: 0.8rem; font-weight:700; color: var(--navy); margin-right: 10px; }
+.seo-score-value{ font-family: var(--mono); font-weight:700; }
+.seo-score-bar{ height: 8px; background: rgba(27,42,65,0.1); border-radius: 999px; margin-top: 8px; overflow:hidden; }
+.seo-score-bar-fill{ height:100%; width:0%; background: #d9534f; transition: width 0.3s ease, background 0.3s ease; }
+.seo-score-checklist{ list-style:none; padding:0; margin: 10px 0 0; font-size: 0.78rem; color: var(--ink-soft); display:flex; flex-direction:column; gap:4px; }
+.seo-score-checklist li.pass::before{ content:"✅ "; }
+.seo-score-checklist li.fail::before{ content:"⚠️ "; }
+.seo-good{ color:#2e7d32; }
+.seo-ok{ color:#d9a441; }
+.seo-bad{ color:#c0392b; }
