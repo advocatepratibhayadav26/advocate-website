@@ -79,4 +79,3 @@ ${contact ? 'संपर्क: ' + contact : ''}`;
     previewEl.classList.remove('print-target');
   });
 })();
-
