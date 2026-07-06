@@ -131,6 +131,9 @@
           <label for="postTitle">📝 Title</label>
           <input id="postTitle" type="text" placeholder="e.g. Legal Awareness Camp" required>
 
+          <label for="postSubtitle">✏️ Subtitle (वैकल्पिक)</label>
+          <input id="postSubtitle" type="text" placeholder="Title के नीचे दिखने वाली छोटी लाइन">
+
           <label for="postCategory">📂 Category</label>
           <input id="postCategory" type="text" list="categoryOptions" placeholder="e.g. Event, Notice, News" required>
           <datalist id="categoryOptions">
@@ -140,17 +143,34 @@
             <option value="Legal Awareness">
           </datalist>
 
-          <label for="postImage">🖼️ Image</label>
+          <label for="postImage">🖼️ Featured Image</label>
           <input id="postImage" type="file" accept="image/*">
           <p class="post-file-hint">Photo अपने आप resize और compress हो जाएगी।</p>
           <img id="postImagePreview" class="post-image-preview" hidden>
+
+          <label for="postGalleryImages">🖼️ Image Gallery (वैकल्पिक, एक साथ कई फोटो चुनें)</label>
+          <input id="postGalleryImages" type="file" accept="image/*" multiple>
+          <p class="post-file-hint">ज्यादा से ज्यादा 6 फोटो — सब compress होकर जुड़ेंगी।</p>
+          <div id="postGalleryPreview" class="post-gallery-preview"></div>
+
+          <label for="postVideoUrl">🎬 Video URL (वैकल्पिक — YouTube link)</label>
+          <input id="postVideoUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
 
           <label for="postPdfUrl">📎 PDF Link (optional)</label>
           <input id="postPdfUrl" type="url" placeholder="Google Drive / अन्य जगह अपलोड करके यहाँ link paste करें">
           <p class="post-file-hint">PDF को पहले Google Drive में अपलोड करें → "Anyone with link" शेयर करें → वह link यहाँ paste करें।</p>
 
-          <label for="postContent">📄 Description</label>
-          <textarea id="postContent" rows="6" placeholder="Write the full update here…" required></textarea>
+          <label for="postContentEditor">📄 Description</label>
+          <div class="rte-toolbar" id="rteToolbar">
+            <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+            <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+            <button type="button" data-cmd="formatBlock" data-value="H3" title="Heading">H</button>
+            <button type="button" data-cmd="insertUnorderedList" title="Bullet List">• ―</button>
+            <button type="button" data-cmd="insertOrderedList" title="Numbered List">1.</button>
+            <button type="button" data-cmd="createLink" title="Link">🔗</button>
+            <button type="button" data-cmd="formatBlock" data-value="P" title="Normal Text">¶</button>
+          </div>
+          <div id="postContentEditor" class="rte-editor" contenteditable="true" data-placeholder="Write the full update here…"></div>
 
           <label class="post-pin-label">
             <input id="postPin" type="checkbox"> 📌 Pin this Post (shows first)
