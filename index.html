@@ -195,6 +195,23 @@
   </div>
 </section>
 
+<section id="posts" class="section reveal">
+  <p class="eyebrow center">Latest Updates</p>
+  <h2 class="section-title center">Legal News & Office Updates</h2>
+
+  <div class="posts-controls">
+    <input id="postSearch" type="text" placeholder="🔍 Search updates…" class="post-search-input">
+    <select id="postCategoryFilter" class="post-filter-select">
+      <option value="all">All Categories</option>
+    </select>
+  </div>
+
+  <div id="postsContainer" class="card-grid posts-grid">
+    <!-- Posts automatically appear here -->
+  </div>
+  <p id="postsEmpty" class="empty-state" hidden>No updates posted yet. Please check back soon.</p>
+</section>
+
 <section id="experience" class="section reveal">
   <p class="eyebrow center">Why Clients Choose This Office</p>
   <h2 class="section-title center">Credentials on Record</h2>
@@ -292,6 +309,19 @@
   </form>
 </section>
 
+<section id="gallery" class="section reveal">
+  <p class="eyebrow center">Gallery</p>
+  <h2 class="section-title center">कार्यालय व कार्यक्रमों की झलकियां</h2>
+  <div id="galleryContainer" class="gallery-grid"></div>
+  <p id="galleryEmpty" class="empty-state" hidden>अभी कोई फोटो नहीं डाली गई है।</p>
+</section>
+
+<div id="galleryLightbox" class="gallery-lightbox" hidden>
+  <span class="gallery-lightbox-close">&times;</span>
+  <img id="galleryLightboxImg" src="" alt="">
+  <p id="galleryLightboxCaption"></p>
+</div>
+
 <section id="location" class="section alt reveal">
   <p class="eyebrow center">Office Location</p>
   <h2 class="section-title center">Mahmudabad, District Sitapur</h2>
@@ -306,36 +336,6 @@
     </iframe>
   </div>
 </section>
-
-<section id="posts" class="section reveal">
-  <p class="eyebrow center">Latest Updates</p>
-  <h2 class="section-title center">Legal News & Office Updates</h2>
-
-  <div class="posts-controls">
-    <input id="postSearch" type="text" placeholder="🔍 Search updates…" class="post-search-input">
-    <select id="postCategoryFilter" class="post-filter-select">
-      <option value="all">All Categories</option>
-    </select>
-  </div>
-
-  <div id="postsContainer" class="card-grid posts-grid">
-    <!-- Posts automatically appear here -->
-  </div>
-  <p id="postsEmpty" class="empty-state" hidden>No updates posted yet. Please check back soon.</p>
-</section>
-
-<section id="gallery" class="section reveal">
-  <p class="eyebrow center">Gallery</p>
-  <h2 class="section-title center">कार्यालय व कार्यक्रमों की झलकियां</h2>
-  <div id="galleryContainer" class="gallery-grid"></div>
-  <p id="galleryEmpty" class="empty-state" hidden>अभी कोई फोटो नहीं डाली गई है।</p>
-</section>
-
-<div id="galleryLightbox" class="gallery-lightbox" hidden>
-  <span class="gallery-lightbox-close">&times;</span>
-  <img id="galleryLightboxImg" src="" alt="">
-  <p id="galleryLightboxCaption"></p>
-</div>
 
 <section id="contact" class="section contact-section reveal">
   <p class="eyebrow center">Get in Touch</p>
@@ -449,4 +449,5 @@ const database = firebase.database();
 <script src="posts.js"></script>
 <script src="gallery.js"></script>
 </body>
-</html>
+ </html>
+ 
