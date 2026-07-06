@@ -156,6 +156,49 @@
             <input id="postPin" type="checkbox"> 📌 Pin this Post (shows first)
           </label>
 
+          <button type="button" id="seoToggleBtn" class="seo-toggle-btn">🔍 SEO Settings (Advanced) ▾</button>
+
+          <div id="seoFieldsWrap" class="seo-fields-wrap" hidden>
+            <p class="seo-fields-hint">ये सारी fields सिर्फ Admin Panel में रहती हैं — वेबसाइट पर visitor को सीधे नहीं दिखतीं, सिर्फ Google जैसे Search Engines इन्हें पढ़ते हैं।</p>
+
+            <label for="postSlug">URL Slug</label>
+            <input id="postSlug" type="text" placeholder="jaise: fir-kya-hai (auto-generate hoga, chahe badal sakte hain)">
+            <p class="field-hint">Sirf English/Hindi-roman letters, numbers aur hyphen (-) use karein.</p>
+
+            <label for="postMetaTitle">Meta Title</label>
+            <input id="postMetaTitle" type="text" maxlength="70" placeholder="Khaali chhoden to Title hi use hoga">
+            <p class="field-hint" id="metaTitleCount">0 / 60 characters (ideal)</p>
+
+            <label for="postMetaDescription">Meta Description</label>
+            <textarea id="postMetaDescription" rows="3" maxlength="170" placeholder="Google search result mein jo dikhega — 150-160 characters best hain"></textarea>
+            <p class="field-hint" id="metaDescCount">0 / 160 characters (ideal)</p>
+
+            <label for="postFocusKeywords">Focus Keywords</label>
+            <input id="postFocusKeywords" type="text" placeholder="jaise: FIR kaise likhein, dahej pratha, RTI aavedan (comma se alag karein)">
+
+            <label for="postImageAlt">Image Alt Text</label>
+            <input id="postImageAlt" type="text" placeholder="Photo ka short description (accessibility + SEO ke liye)">
+
+            <label for="postCanonicalUrl">Canonical URL (vaikalpik)</label>
+            <input id="postCanonicalUrl" type="text" placeholder="Khaali chhoden to apne aap sahi URL use hoga">
+
+            <label for="postTags">Tags</label>
+            <input id="postTags" type="text" placeholder="jaise: FIR, Police, Criminal Law (comma se alag karein)">
+
+            <label for="postAuthorName">Author Name</label>
+            <input id="postAuthorName" type="text" value="Advocate Pratibha Yadav">
+
+            <label for="postPublishDate">Publish Date</label>
+            <input id="postPublishDate" type="date">
+
+            <div class="seo-score-box">
+              <span class="seo-score-label">SEO Score</span>
+              <span id="seoScoreValue" class="seo-score-value">0 / 100</span>
+              <div class="seo-score-bar"><div id="seoScoreBar" class="seo-score-bar-fill"></div></div>
+              <ul id="seoScoreChecklist" class="seo-score-checklist"></ul>
+            </div>
+          </div>
+
           <div class="post-form-actions">
             <button type="submit" id="postSubmitBtn">📅 Publish</button>
             <button type="button" id="postCancelEditBtn" class="secondary-btn ghost" hidden>Cancel Edit</button>
