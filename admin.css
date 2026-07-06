@@ -430,3 +430,26 @@ progress{ width:100%; margin-top:8px; height: 8px; }
 .admin-post-info{ flex:1; min-width:0; }
 .admin-post-title{ font-weight:700; margin:0 0 4px; color: var(--navy); }
 .admin-post-meta{ font-size: 0.78rem; color: var(--ink-soft); margin:0; font-family: var(--mono); }
+
+/* ===== Admin Gallery Grid ===== */
+.admin-gallery-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  padding: 18px 20px;
+}
+.admin-gallery-cell{
+  position:relative;
+  border-radius: var(--radius);
+  overflow:hidden;
+  background: var(--paper-dim);
+}
+.admin-gallery-cell img{ width:100%; height:130px; object-fit:cover; display:block; }
+.admin-gallery-cell .delete{
+  position:absolute; top:6px; right:6px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  width:30px; height:30px;
+  display:flex; align-items:center; justify-content:center;
+}
+.admin-gallery-caption{ font-size: 0.75rem; padding: 6px 8px; margin:0; color: var(--ink-soft); }
