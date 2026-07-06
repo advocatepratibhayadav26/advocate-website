@@ -66,6 +66,12 @@
     return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
   }
 
+  function stripHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html || '';
+    return div.textContent || '';
+  }
+
   function excerpt(text, len) {
     if (!text) return '';
     return text.length > len ? text.slice(0, len).trim() + '…' : text;
@@ -91,7 +97,7 @@
           ${p.category ? `<span class="badge post-category">${escapeHtml(p.category)}</span>` : ''}
           <h3 class="post-title">${escapeHtml(p.title || '')}</h3>
           <p class="post-date">${formatDate(p.createdAt)}</p>
-          <p class="post-excerpt">${escapeHtml(excerpt(p.content, 140))}</p>
+          <p class="post-excerpt">${escapeHtml(excerpt(stripHtml(p.content), 140))}</p>
           <a class="post-readmore" href="post.html?${p.slug ? 'post=' + encodeURIComponent(p.slug) : 'id=' + encodeURIComponent(p.id)}">Read More →</a>
         </div>
       `;
