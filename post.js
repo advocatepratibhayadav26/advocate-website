@@ -59,7 +59,7 @@
     const pageUrl = post.canonicalUrl
       ? post.canonicalUrl
       : window.location.origin + window.location.pathname + (post.slug ? '?post=' + encodeURIComponent(post.slug) : '?id=' + encodeURIComponent(id));
-    const plainExcerpt = post.metaDescription || (post.content || '').slice(0, 155).trim();
+    const plainExcerpt = post.metaDescription || stripHtml(post.content || '').slice(0, 155).trim();
     const imgAltText = post.imageAlt || post.title || '';
     const authorName = post.authorName || 'Advocate Pratibha Yadav';
 
@@ -91,13 +91,18 @@
 
     const whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent((post.title || 'Latest Update') + ' — ' + pageUrl);
     const facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl);
+    const videoEmbedUrl = getYouTubeEmbedUrl(post.videoUrl);
+    const gallery = Array.isArray(post.galleryImages) ? post.galleryImages : [];
 
     postDetail.innerHTML = `
       ${post.category ? `<span class="badge post-category">${escapeHtml(post.category)}</span>` : ''}
       <h1 class="post-detail-title">${escapeHtml(post.title || '')}</h1>
+      ${post.subtitle ? `<p class="post-detail-subtitle">${escapeHtml(post.subtitle)}</p>` : ''}
       <p class="post-date">${formatDate(post.publishDate ? new Date(post.publishDate).getTime() : post.createdAt)} ${authorName ? '· ' + escapeHtml(authorName) : ''}</p>
       ${post.imageUrl ? `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(imgAltText)}" class="post-detail-image">` : ''}
-      <div class="post-detail-content">${escapeHtml(post.content || '').replace(/\n/g, '<br>')}</div>
+      <div class="post-detail-content">${post.content || ''}</div>
+      ${videoEmbedUrl ? `<div class="post-video-wrap"><iframe src="${videoEmbedUrl}" allowfullscreen loading="lazy"></iframe></div>` : ''}
+      ${gallery.length ? `<div class="post-gallery-grid">${gallery.map(src => `<img src="${escapeHtml(src)}" alt="${escapeHtml(post.title || '')}">`).join('')}</div>` : ''}
       ${post.pdfUrl ? `<a href="${escapeHtml(post.pdfUrl)}" target="_blank" class="btn post-pdf-link">📄 Download Attachment</a>` : ''}
       <div class="post-share">
         <span class="post-share-label">Share:</span>
@@ -105,6 +110,18 @@
         <a href="${facebookUrl}" target="_blank" class="share-btn share-facebook">📘 Facebook</a>
       </div>
     `;
+  }
+
+  function getYouTubeEmbedUrl(url) {
+    if (!url) return '';
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{6,})/);
+    return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+  }
+
+  function stripHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || '';
   }
 
   function injectSchema(id, post, pageUrl, plainExcerpt, authorName) {
