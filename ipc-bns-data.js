@@ -30,4 +30,3 @@ const IPC_BNS_DATA = [
   { ipc: "506", bns: "351", offence: "Criminal Intimidation", hindi: "आपराधिक धमकी", desc: "जान-माल को नुकसान पहुँचाने की धमकी देना।" },
   { ipc: "509", bns: "79", offence: "Insulting Modesty of a Woman", hindi: "महिला की गरिमा का अपमान", desc: "शब्द, इशारे या हरकत से किसी महिला की मर्यादा को ठेस पहुँचाना।" }
 ];
-
