@@ -12,15 +12,23 @@
   const postFormTitle = document.getElementById('postFormTitle');
   const editingPostId = document.getElementById('editingPostId');
   const postTitle = document.getElementById('postTitle');
+  const postSubtitle = document.getElementById('postSubtitle');
   const postCategory = document.getElementById('postCategory');
   const postImage = document.getElementById('postImage');
   const postImagePreview = document.getElementById('postImagePreview');
+  const postGalleryImages = document.getElementById('postGalleryImages');
+  const postGalleryPreview = document.getElementById('postGalleryPreview');
+  const postVideoUrl = document.getElementById('postVideoUrl');
   const postPdfUrl = document.getElementById('postPdfUrl');
-  const postContent = document.getElementById('postContent');
+  const postContentEditor = document.getElementById('postContentEditor');
+  const rteToolbar = document.getElementById('rteToolbar');
   const postPin = document.getElementById('postPin');
   const postSubmitBtn = document.getElementById('postSubmitBtn');
   const postCancelEditBtn = document.getElementById('postCancelEditBtn');
   const postFormStatus = document.getElementById('postFormStatus');
+
+  let pendingGalleryImages = []; // base64 strings queued for new/edited post
+
 
   const seoToggleBtn = document.getElementById('seoToggleBtn');
   const seoFieldsWrap = document.getElementById('seoFieldsWrap');
@@ -93,7 +101,8 @@
     metaDescCount.style.color = descLen > 160 ? '#c0392b' : '';
   }
   [postMetaTitle, postMetaDescription].forEach(el => el.addEventListener('input', () => { updateCounters(); updateSeoScore(); }));
-  [postCategory, postContent, postFocusKeywords, postImageAlt].forEach(el => el.addEventListener('input', updateSeoScore));
+  [postCategory, postFocusKeywords, postImageAlt].forEach(el => el.addEventListener('input', updateSeoScore));
+  postContentEditor.addEventListener('input', updateSeoScore);
 
   // ---------- Live SEO Score (Yoast-style checklist) ----------
   function updateSeoScore() {
@@ -101,7 +110,7 @@
     const title = postTitle.value.trim();
     const metaTitle = postMetaTitle.value.trim() || title;
     const metaDesc = postMetaDescription.value.trim();
-    const content = postContent.value.trim();
+    const content = postContentEditor.textContent.trim();
     const keywords = postFocusKeywords.value.trim().split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
     const mainKeyword = keywords[0] || '';
     const slug = postSlug.value.trim();
@@ -202,7 +211,11 @@
 
     postTitle.value = post.title || '';
     postCategory.value = post.category || '';
-    postContent.value = post.content || '';
+    postContentEditor.innerHTML = post.content || '';
+    postSubtitle.value = post.subtitle || '';
+    postVideoUrl.value = post.videoUrl || '';
+    pendingGalleryImages = Array.isArray(post.galleryImages) ? [...post.galleryImages] : [];
+    renderGalleryPreview();
     postPin.checked = !!post.pinned;
     postPdfUrl.value = post.pdfUrl || '';
 
@@ -243,6 +256,9 @@
     postImagePreview.hidden = true;
     existingImageUrl = '';
     pendingImageBase64 = null;
+    postContentEditor.innerHTML = '';
+    pendingGalleryImages = [];
+    renderGalleryPreview();
     slugManuallyEdited = false;
     postAuthorName.value = 'Advocate Pratibha Yadav';
     postPublishDate.value = new Date().toISOString().slice(0, 10);
@@ -292,9 +308,68 @@
     });
   }
 
+  // ---------- Rich Text Toolbar ----------
+  rteToolbar.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-cmd]');
+    if (!btn) return;
+    postContentEditor.focus();
+    const cmd = btn.dataset.cmd;
+    if (cmd === 'createLink') {
+      const url = prompt('Link ka URL daalein:', 'https://');
+      if (url) document.execCommand(cmd, false, url);
+    } else if (cmd === 'formatBlock') {
+      document.execCommand(cmd, false, btn.dataset.value);
+    } else {
+      document.execCommand(cmd, false, null);
+    }
+  });
+
+  // ---------- Image Gallery: multiple photos -> resize + compress -> base64 array ----------
+  const GALLERY_MAX_WIDTH = 700;
+  const GALLERY_QUALITY = 0.6;
+  const GALLERY_LIMIT = 6;
+
+  postGalleryImages.addEventListener('change', async () => {
+    const files = Array.from(postGalleryImages.files).slice(0, GALLERY_LIMIT - pendingGalleryImages.length);
+    if (files.length === 0) return;
+
+    try {
+      const results = await Promise.all(files.map(f => resizeImageToBase64(f, GALLERY_MAX_WIDTH, GALLERY_QUALITY)));
+      pendingGalleryImages = [...pendingGalleryImages, ...results].slice(0, GALLERY_LIMIT);
+      renderGalleryPreview();
+    } catch (err) {
+      console.error(err);
+      alert('कुछ फोटो process नहीं हो पाईं।');
+    }
+    postGalleryImages.value = '';
+  });
+
+  function renderGalleryPreview() {
+    postGalleryPreview.innerHTML = '';
+    pendingGalleryImages.forEach((src, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'gallery-thumb-wrap';
+      wrap.innerHTML = `<img src="${src}"><button type="button" class="remove-thumb-btn" data-idx="${idx}">✕</button>`;
+      postGalleryPreview.appendChild(wrap);
+    });
+    postGalleryPreview.querySelectorAll('.remove-thumb-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        pendingGalleryImages.splice(Number(btn.dataset.idx), 1);
+        renderGalleryPreview();
+      });
+    });
+  }
+
   // ---------- Submit (Publish / Save) ----------
   postForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (!postContentEditor.textContent.trim()) {
+      showStatus('error', 'कृपया Description लिखें।');
+      postContentEditor.focus();
+      return;
+    }
+
     postSubmitBtn.disabled = true;
     const originalLabel = postSubmitBtn.textContent;
     postSubmitBtn.textContent = 'Publishing…';
@@ -306,7 +381,10 @@
       const record = {
         title: postTitle.value.trim(),
         category: postCategory.value.trim(),
-        content: postContent.value.trim(),
+        content: postContentEditor.innerHTML.trim(),
+        subtitle: postSubtitle.value.trim(),
+        videoUrl: postVideoUrl.value.trim(),
+        galleryImages: pendingGalleryImages,
         pinned: !!postPin.checked,
         imageUrl: imageUrl,
         pdfUrl: postPdfUrl.value.trim(),
