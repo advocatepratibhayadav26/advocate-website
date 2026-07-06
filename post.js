@@ -3,20 +3,31 @@
   const postNotFound = document.getElementById('postNotFound');
   const params = new URLSearchParams(window.location.search);
   const postId = params.get('id');
+  const postSlug = params.get('post');
 
-  if (!postId) {
+  if (!postId && !postSlug) {
     showNotFound();
     return;
   }
 
-  database.ref('posts/' + postId).once('value')
-    .then((snapshot) => {
-      const post = snapshot.val();
-      if (!post) {
+  const lookup = postSlug
+    ? database.ref('posts').orderByChild('slug').equalTo(postSlug).once('value')
+        .then(snap => {
+          if (!snap.exists()) return null;
+          let result = null;
+          snap.forEach(child => { result = { id: child.key, post: child.val() }; });
+          return result;
+        })
+    : database.ref('posts/' + postId).once('value')
+        .then(snap => snap.exists() ? { id: postId, post: snap.val() } : null);
+
+  lookup
+    .then((result) => {
+      if (!result) {
         showNotFound();
         return;
       }
-      renderPost(postId, post);
+      renderPost(result.id, result.post);
     })
     .catch((err) => {
       console.error(err);
@@ -41,11 +52,16 @@
   }
 
   function renderPost(id, post) {
-    document.title = (post.title || 'Latest Update') + ' | Advocate Pratibha Yadav';
+    const displayTitle = post.metaTitle || post.title || 'Latest Update';
+    document.title = displayTitle + ' | Advocate Pratibha Yadav';
     document.getElementById('postPageTitle').textContent = document.title;
 
-    const pageUrl = window.location.origin + window.location.pathname + '?id=' + encodeURIComponent(id);
-    const plainExcerpt = (post.content || '').slice(0, 155).trim();
+    const pageUrl = post.canonicalUrl
+      ? post.canonicalUrl
+      : window.location.origin + window.location.pathname + (post.slug ? '?post=' + encodeURIComponent(post.slug) : '?id=' + encodeURIComponent(id));
+    const plainExcerpt = post.metaDescription || (post.content || '').slice(0, 155).trim();
+    const imgAltText = post.imageAlt || post.title || '';
+    const authorName = post.authorName || 'Advocate Pratibha Yadav';
 
     const metaDesc = document.getElementById('postMetaDescription');
     if (metaDesc) metaDesc.setAttribute('content', plainExcerpt || document.title);
@@ -59,7 +75,19 @@
     const ogDesc = document.getElementById('postOgDescription');
     if (ogDesc) ogDesc.setAttribute('content', plainExcerpt || document.title);
 
-    injectSchema(id, post, pageUrl, plainExcerpt);
+    if (post.focusKeywords) {
+      const keywordsTag = document.createElement('meta');
+      keywordsTag.name = 'keywords';
+      keywordsTag.content = post.focusKeywords;
+      document.head.appendChild(keywordsTag);
+    }
+
+    const authorTag = document.createElement('meta');
+    authorTag.name = 'author';
+    authorTag.content = authorName;
+    document.head.appendChild(authorTag);
+
+    injectSchema(id, post, pageUrl, plainExcerpt, authorName);
 
     const whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent((post.title || 'Latest Update') + ' — ' + pageUrl);
     const facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl);
@@ -67,8 +95,8 @@
     postDetail.innerHTML = `
       ${post.category ? `<span class="badge post-category">${escapeHtml(post.category)}</span>` : ''}
       <h1 class="post-detail-title">${escapeHtml(post.title || '')}</h1>
-      <p class="post-date">${formatDate(post.createdAt)}</p>
-      ${post.imageUrl ? `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title || '')}" class="post-detail-image">` : ''}
+      <p class="post-date">${formatDate(post.publishDate ? new Date(post.publishDate).getTime() : post.createdAt)} ${authorName ? '· ' + escapeHtml(authorName) : ''}</p>
+      ${post.imageUrl ? `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(imgAltText)}" class="post-detail-image">` : ''}
       <div class="post-detail-content">${escapeHtml(post.content || '').replace(/\n/g, '<br>')}</div>
       ${post.pdfUrl ? `<a href="${escapeHtml(post.pdfUrl)}" target="_blank" class="btn post-pdf-link">📄 Download Attachment</a>` : ''}
       <div class="post-share">
@@ -79,16 +107,17 @@
     `;
   }
 
-  function injectSchema(id, post, pageUrl, plainExcerpt) {
+  function injectSchema(id, post, pageUrl, plainExcerpt, authorName) {
     const articleSchema = {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": post.title || 'Latest Update',
       "description": plainExcerpt || post.title || '',
-      "datePublished": post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+      "datePublished": post.publishDate ? new Date(post.publishDate).toISOString() : (post.createdAt ? new Date(post.createdAt).toISOString() : undefined),
       "image": post.imageUrl || undefined,
       "url": pageUrl,
-      "author": { "@type": "Person", "name": "Advocate Pratibha Yadav" },
+      "keywords": post.focusKeywords || post.tags || undefined,
+      "author": { "@type": "Person", "name": authorName },
       "publisher": { "@type": "LegalService", "name": "Advocate Pratibha Yadav" }
     };
 
