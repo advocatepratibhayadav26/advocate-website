@@ -75,4 +75,3 @@ ${legalGroundPara}
     previewEl.classList.remove('print-target');
   });
 })();
-
