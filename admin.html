@@ -52,6 +52,7 @@
   <nav class="admin-tabs">
     <button class="admin-tab-btn active" data-tab="appointmentsView">📅 Appointments</button>
     <button class="admin-tab-btn" data-tab="postsView">📝 Manage Posts</button>
+    <button class="admin-tab-btn" data-tab="galleryView">🖼️ Gallery</button>
   </nav>
 
   <main class="admin-main">
@@ -171,6 +172,35 @@
 
     </div>
 
+    <!-- ===== GALLERY MANAGEMENT ===== -->
+    <div id="galleryView" class="admin-tab-panel" hidden>
+
+      <section class="post-form-card">
+        <h2>🖼️ Add Photo</h2>
+        <form id="galleryForm" class="post-form">
+          <label for="galleryImage">Photo चुनें</label>
+          <input id="galleryImage" type="file" accept="image/*" required>
+          <p class="post-file-hint">Photo अपने आप resize और compress हो जाएगी।</p>
+          <img id="galleryImagePreview" class="post-image-preview" hidden>
+
+          <label for="galleryCaption">Caption (वैकल्पिक)</label>
+          <input id="galleryCaption" type="text" placeholder="जैसे: विधिक जागरूकता शिविर, जुलाई 2026">
+
+          <div class="post-form-actions">
+            <button type="submit" id="gallerySubmitBtn">📤 Upload करें</button>
+          </div>
+          <p id="galleryFormStatus" class="form-status" hidden></p>
+        </form>
+      </section>
+
+      <section class="table-wrap">
+        <h2 class="posts-list-heading">All Photos</h2>
+        <div id="adminGalleryList" class="admin-gallery-grid"></div>
+        <p id="galleryEmptyState" class="empty-state" hidden>अभी कोई फोटो नहीं डाली गई।</p>
+      </section>
+
+    </div>
+
   </main>
 </div>
 
@@ -209,5 +239,6 @@
 
 <script src="admin.js"></script>
 <script src="admin-posts.js"></script>
+<script src="admin-gallery.js"></script>
 </body>
 </html>
