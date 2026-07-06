@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visiting Card | Advocate Pratibha Yadav</title>
+<meta name="description" content="Advocate Pratibha Yadav — Digital Visiting Card. Civil Court, Mahmudabad, District Sitapur.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#1B2A41">
+<link rel="canonical" href="https://advocatepratibhayadav.in/visiting-card.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{ background: var(--paper-dim, #f2ede2); }
+  .vc-page{
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 40px 20px;
+    gap: 26px;
+  }
+  .vc-card{
+    width: 400px;
+    max-width: 92vw;
+    aspect-ratio: 16 / 9.2;
+    background: linear-gradient(135deg, #1B2A41 0%, #101a2b 100%);
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+    color: #F7F4EC;
+    padding: 26px 28px;
+    box-shadow: 0 25px 60px rgba(16,26,43,0.35);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .vc-card::before{
+    content:"";
+    position:absolute;
+    top:-60px; right:-60px;
+    width:180px; height:180px;
+    border-radius:50%;
+    border: 1px solid rgba(201,164,92,0.35);
+  }
+  .vc-card::after{
+    content:"";
+    position:absolute;
+    bottom:-40px; right:30px;
+    width:110px; height:110px;
+    border-radius:50%;
+    border: 1px solid rgba(201,164,92,0.25);
+  }
+  .vc-top{ display:flex; align-items:flex-start; justify-content:space-between; position:relative; z-index:1; }
+  .vc-mark{ font-size: 1.9rem; color: #C9A45C; }
+  .vc-enroll{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    text-align:right;
+    color: rgba(247,244,236,0.6);
+    line-height:1.5;
+  }
+  .vc-enroll b{ color:#C9A45C; display:block; font-size:0.72rem; }
+  .vc-name{
+    font-family: 'Fraunces', serif;
+    font-size: 1.55rem;
+    font-weight:600;
+    margin: 0;
+    position:relative; z-index:1;
+  }
+  .vc-degree{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color:#C9A45C;
+    margin: 2px 0 0;
+  }
+  .vc-practice{
+    font-size: 0.78rem;
+    color: rgba(247,244,236,0.75);
+    margin: 6px 0 0;
+  }
+  .vc-divider{ height:1px; background: rgba(201,164,92,0.3); margin: 14px 0; position:relative; z-index:1; }
+  .vc-contact{
+    display:flex;
+    flex-direction:column;
+    gap: 4px;
+    font-size: 0.72rem;
+    position:relative; z-index:1;
+  }
+  .vc-contact span{ color: rgba(247,244,236,0.85); }
+  .vc-contact b{ color:#C9A45C; margin-right:6px; }
+
+  .vc-actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .vc-actions button, .vc-actions a{
+    padding: 11px 22px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight:700;
+    border: none;
+    cursor:pointer;
+    background: var(--navy, #1B2A41);
+    color: #C9A45C;
+    text-decoration:none;
+  }
+  .vc-actions button:hover, .vc-actions a:hover{ opacity:0.9; }
+  .vc-actions .secondary{ background:#fff; color: var(--navy,#1B2A41); border:1px solid rgba(27,42,65,0.25); }
+  .vc-back-link{ font-size:0.85rem; color: var(--ink-soft, #5b5b5b); }
+</style>
+</head>
+<body>
+
+<div class="vc-page">
+
+  <div id="vcCard" class="vc-card">
+    <div class="vc-top">
+      <span class="vc-mark">⚖</span>
+      <div class="vc-enroll">
+        ENROLLMENT NO.
+        <b>UP11548/26</b>
+      </div>
+    </div>
+
+    <div>
+      <h1 class="vc-name">Advocate Pratibha Yadav</h1>
+      <p class="vc-degree">B.A. LL.B.</p>
+      <p class="vc-practice">Civil · Criminal · Family · Property · Consumer Matters</p>
+    </div>
+
+    <div>
+      <div class="vc-divider"></div>
+      <div class="vc-contact">
+        <span><b>📍</b>Near Civil Court, Mahmudabad, District Sitapur, U.P.</span>
+        <span><b>📞</b>9454337340 / 9068182453</span>
+        <span><b>✉</b>advocatepratibhayadav26@gmail.com</span>
+        <span><b>🌐</b>advocatepratibhayadav.in</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vc-actions">
+    <button id="downloadCardBtn">⬇️ Download as Image</button>
+    <a href="https://wa.me/919454337340" target="_blank" class="secondary">💬 Share on WhatsApp</a>
+  </div>
+
+  <a href="index.html" class="vc-back-link">← Website पर वापस जाएं</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  document.getElementById('downloadCardBtn').addEventListener('click', function () {
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Preparing…';
+    html2canvas(document.getElementById('vcCard'), { scale: 3, backgroundColor: null })
+      .then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'Advocate-Pratibha-Yadav-Visiting-Card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = '⬇️ Download as Image';
+      });
+  });
+</script>
+</body>
+</html>
