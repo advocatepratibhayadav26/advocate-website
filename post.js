@@ -75,6 +75,21 @@
     const ogDesc = document.getElementById('postOgDescription');
     if (ogDesc) ogDesc.setAttribute('content', plainExcerpt || document.title);
 
+    const robotsTag = document.getElementById('postRobots');
+    if (robotsTag) robotsTag.setAttribute('content', post.robots === 'noindex' ? 'noindex,follow' : 'index,follow');
+
+    const ogImg = document.getElementById('postOgImage');
+    if (ogImg && post.imageUrl) ogImg.setAttribute('content', post.imageUrl);
+
+    const twTitle = document.getElementById('postTwitterTitle');
+    if (twTitle) twTitle.setAttribute('content', document.title);
+
+    const twDesc = document.getElementById('postTwitterDescription');
+    if (twDesc) twDesc.setAttribute('content', plainExcerpt || document.title);
+
+    const twImg = document.getElementById('postTwitterImage');
+    if (twImg && post.imageUrl) twImg.setAttribute('content', post.imageUrl);
+
     if (post.focusKeywords) {
       const keywordsTag = document.createElement('meta');
       keywordsTag.name = 'keywords';
@@ -110,6 +125,32 @@
         <a href="${facebookUrl}" target="_blank" class="share-btn share-facebook">📘 Facebook</a>
       </div>
     `;
+
+    buildTableOfContents();
+  }
+
+  // ---------- Auto Table of Contents ----------
+  function buildTableOfContents() {
+    const contentEl = postDetail.querySelector('.post-detail-content');
+    if (!contentEl) return;
+
+    const headings = contentEl.querySelectorAll('h3');
+    if (headings.length < 2) return; // TOC not useful for very short posts
+
+    const tocItems = [];
+    headings.forEach((h, idx) => {
+      const id = 'section-' + (idx + 1);
+      h.id = id;
+      tocItems.push(`<li><a href="#${id}">${h.textContent}</a></li>`);
+    });
+
+    const tocEl = document.createElement('div');
+    tocEl.className = 'post-toc';
+    tocEl.innerHTML = `
+      <p class="post-toc-title">📑 इस पोस्ट में</p>
+      <ul class="post-toc-list">${tocItems.join('')}</ul>
+    `;
+    contentEl.parentNode.insertBefore(tocEl, contentEl);
   }
 
   function getYouTubeEmbedUrl(url) {
