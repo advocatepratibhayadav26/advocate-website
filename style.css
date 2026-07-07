@@ -850,3 +850,32 @@ footer{
 .post-detail-content h3{ margin: 18px 0 8px; }
 .post-detail-content ul, .post-detail-content ol{ padding-left: 22px; margin: 10px 0; }
 .post-detail-content a{ color: var(--seal-red); text-decoration:underline; }
+
+/* ===== Auto Table of Contents ===== */
+.post-toc{
+  background: var(--paper);
+  border: 1px solid rgba(201,164,92,0.35);
+  border-left: 4px solid var(--brass);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 20px 0 26px;
+}
+.post-toc-title{
+  font-weight:700;
+  color: var(--navy);
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+}
+.post-toc-list{
+  list-style: decimal;
+  padding-left: 20px;
+  margin: 0;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+}
+.post-toc-list a{
+  color: var(--seal-red);
+  font-size: 0.88rem;
+}
+.post-toc-list a:hover{ text-decoration: underline; }
