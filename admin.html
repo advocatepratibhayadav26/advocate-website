@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+  // Clickjacking protection: bust out if loaded inside an iframe
+  if (window.top !== window.self) {
+    window.top.location = window.self.location;
+  }
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard | Advocate Pratibha Yadav</title>
@@ -53,6 +59,7 @@
     <button class="admin-tab-btn active" data-tab="appointmentsView">📅 Appointments</button>
     <button class="admin-tab-btn" data-tab="postsView">📝 Manage Posts</button>
     <button class="admin-tab-btn" data-tab="galleryView">🖼️ Gallery</button>
+    <button class="admin-tab-btn" data-tab="securityView">🔒 Security</button>
   </nav>
 
   <main class="admin-main">
@@ -211,6 +218,13 @@
             <label for="postPublishDate">Publish Date</label>
             <input id="postPublishDate" type="date">
 
+            <label for="postRobots">Search Engine Visibility</label>
+            <select id="postRobots">
+              <option value="index">Index — Google में दिखे (सामान्य)</option>
+              <option value="noindex">No Index — Google में न दिखे</option>
+            </select>
+            <p class="field-hint">Open Graph aur Twitter Card tags upar diye gaye Title/Description/Image se apne aap ban jaate hain — alag se bharne ki zaroorat nahi.</p>
+
             <div class="seo-score-box">
               <span class="seo-score-label">SEO Score</span>
               <span id="seoScoreValue" class="seo-score-value">0 / 100</span>
@@ -264,6 +278,27 @@
 
     </div>
 
+    <!-- ===== SECURITY ===== -->
+    <div id="securityView" class="admin-tab-panel" hidden>
+
+      <section class="post-form-card">
+        <h2>🔒 Security Status</h2>
+        <ul class="security-status-list">
+          <li>✅ Auto-Logout: 20 मिनट तक कोई activity न होने पर अपने आप logout</li>
+          <li>✅ Clickjacking Protection: Admin panel किसी और साइट के frame में नहीं खुल सकता</li>
+          <li>✅ Database Rules: सिर्फ logged-in admin ही data बदल सकता है</li>
+          <li>✅ Admin Page Hidden: robots.txt से admin.html search engines से छुपा है</li>
+        </ul>
+      </section>
+
+      <section class="table-wrap">
+        <h2 class="posts-list-heading">📋 Recent Login History (आखिरी 20)</h2>
+        <div id="loginHistoryList" class="login-history-list"></div>
+        <p id="loginHistoryEmpty" class="empty-state" hidden>अभी कोई login record नहीं है।</p>
+      </section>
+
+    </div>
+
   </main>
 </div>
 
@@ -304,4 +339,5 @@
 <script src="admin-posts.js"></script>
 <script src="admin-gallery.js"></script>
 </body>
-</html>
+                                                                                            </html>
+                                                                                            
