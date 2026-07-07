@@ -41,6 +41,7 @@
   const postTags = document.getElementById('postTags');
   const postAuthorName = document.getElementById('postAuthorName');
   const postPublishDate = document.getElementById('postPublishDate');
+  const postRobots = document.getElementById('postRobots');
   const metaTitleCount = document.getElementById('metaTitleCount');
   const metaDescCount = document.getElementById('metaDescCount');
   const seoScoreValue = document.getElementById('seoScoreValue');
@@ -229,6 +230,7 @@
     postTags.value = post.tags || '';
     postAuthorName.value = post.authorName || 'Advocate Pratibha Yadav';
     postPublishDate.value = post.publishDate || '';
+    postRobots.value = post.robots || 'index';
     updateCounters();
     updateSeoScore();
 
@@ -262,6 +264,7 @@
     slugManuallyEdited = false;
     postAuthorName.value = 'Advocate Pratibha Yadav';
     postPublishDate.value = new Date().toISOString().slice(0, 10);
+    postRobots.value = 'index';
     updateCounters();
     updateSeoScore();
   }
@@ -397,6 +400,7 @@
         tags: postTags.value.trim(),
         authorName: postAuthorName.value.trim() || 'Advocate Pratibha Yadav',
         publishDate: postPublishDate.value || new Date().toISOString().slice(0, 10),
+        robots: postRobots.value,
         seoScore: updateSeoScore()
       };
 
