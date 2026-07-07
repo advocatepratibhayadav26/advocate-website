@@ -45,10 +45,87 @@ let unsubscribeSnapshot = null;
 auth.onAuthStateChanged((user) => {
   if (user) {
     showDashboard();
+    logLoginEvent(user);
+    startInactivityTimer();
   } else {
     showLogin();
+    stopInactivityTimer();
   }
 });
+
+// ---------- Login History ----------
+function logLoginEvent(user) {
+  if (typeof database === 'undefined') return;
+  database.ref('loginHistory').push({
+    email: user.email || 'unknown',
+    time: firebase.database.ServerValue.TIMESTAMP,
+    device: navigator.userAgent
+  }).catch(err => console.error('Could not log login:', err));
+
+  // Keep only the most recent 20 entries to avoid unbounded growth
+  database.ref('loginHistory').orderByChild('time').once('value').then(snap => {
+    const entries = [];
+    snap.forEach(child => entries.push(child.key));
+    if (entries.length > 20) {
+      const toRemove = entries.slice(0, entries.length - 20);
+      toRemove.forEach(key => database.ref('loginHistory/' + key).remove());
+    }
+  }).catch(() => {});
+
+  renderLoginHistory();
+}
+
+function renderLoginHistory() {
+  const listEl = document.getElementById('loginHistoryList');
+  const emptyEl = document.getElementById('loginHistoryEmpty');
+  if (!listEl || typeof database === 'undefined') return;
+
+  database.ref('loginHistory').orderByChild('time').once('value').then(snap => {
+    const entries = [];
+    snap.forEach(child => entries.push(child.val()));
+    entries.reverse();
+
+    if (entries.length === 0) {
+      emptyEl.hidden = false;
+      listEl.innerHTML = '';
+      return;
+    }
+    emptyEl.hidden = true;
+
+    listEl.innerHTML = entries.map(e => {
+      const deviceShort = (e.device || '').includes('Mobile') ? '📱 Mobile' : '💻 Desktop';
+      const time = e.time ? new Date(e.time).toLocaleString('en-IN') : '';
+      return `<div class="login-history-row"><span>${deviceShort}</span><span>${e.email || ''}</span><span>${time}</span></div>`;
+    }).join('');
+  }).catch(err => console.error('Could not load login history:', err));
+}
+
+// ---------- Auto-Logout after inactivity ----------
+const INACTIVITY_LIMIT_MS = 20 * 60 * 1000; // 20 minutes
+let inactivityTimer = null;
+
+function startInactivityTimer() {
+  resetInactivityTimer();
+  ['mousemove', 'keydown', 'click', 'touchstart', 'scroll'].forEach(evt => {
+    document.addEventListener(evt, resetInactivityTimer);
+  });
+}
+
+function stopInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  ['mousemove', 'keydown', 'click', 'touchstart', 'scroll'].forEach(evt => {
+    document.removeEventListener(evt, resetInactivityTimer);
+  });
+}
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    alert('Inactivity ki wajah se aap logout ho gaye hain, suraksha ke liye.');
+    auth.signOut();
+  }, INACTIVITY_LIMIT_MS);
+}
+
 
 function showDashboard() {
   loginScreen.hidden = true;
