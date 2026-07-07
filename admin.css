@@ -567,3 +567,28 @@ progress{ width:100%; margin-top:8px; height: 8px; }
   cursor:pointer;
   line-height:1;
 }
+
+/* ===== Security Tab ===== */
+.security-status-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.login-history-list{ display:flex; flex-direction:column; }
+.login-history-row{
+  display:grid;
+  grid-template-columns: 100px 1fr 160px;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(27,42,65,0.08);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+@media (max-width: 640px){
+  .login-history-row{ grid-template-columns: 1fr; gap:2px; }
+}
