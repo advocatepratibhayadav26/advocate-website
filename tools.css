@@ -178,3 +178,17 @@
   cursor:pointer;
 }
 .checklist-link{ font-size: 0.85rem; color: var(--seal-red); font-weight:600; }
+
+/* ===== FAQ Page ===== */
+.faq-category-title{
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight:600;
+  color: var(--brass);
+  margin: 22px 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.faq-category-title:first-child{ margin-top: 0; }
+.faq-answer{ margin:0 0 20px; color: var(--ink-soft); font-size:0.92rem; line-height:1.7; }
+.faq-answer a{ color: var(--seal-red); text-decoration:underline; }
