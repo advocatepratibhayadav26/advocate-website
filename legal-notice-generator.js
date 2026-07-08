@@ -67,11 +67,7 @@ ${legalGroundPara}
   });
 
   downloadBtn.addEventListener('click', () => {
-    previewEl.classList.add('print-target');
+    document.getElementById('printArea').textContent = previewEl.textContent;
     window.print();
-  });
-
-  window.addEventListener('afterprint', () => {
-    previewEl.classList.remove('print-target');
   });
 })();
