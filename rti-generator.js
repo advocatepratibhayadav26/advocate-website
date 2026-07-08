@@ -71,11 +71,7 @@ ${contact ? 'संपर्क: ' + contact : ''}`;
   });
 
   downloadBtn.addEventListener('click', () => {
-    previewEl.classList.add('print-target');
+    document.getElementById('printArea').textContent = generatedText;
     window.print();
-  });
-
-  window.addEventListener('afterprint', () => {
-    previewEl.classList.remove('print-target');
   });
 })();
