@@ -879,3 +879,6 @@ footer{
   font-size: 0.88rem;
 }
 .post-toc-list a:hover{ text-decoration: underline; }
+
+.faq-more-link{ text-align:center; margin-top: 24px; }
+.faq-more-link a{ color: var(--seal-red); font-weight:600; }
