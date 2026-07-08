@@ -98,16 +98,15 @@
 .field-hint{ font-size: 0.78rem; color: var(--ink-soft); margin: 2px 0 0; font-weight:400; }
 
 /* ===== Print handling for RTI / Legal Notice generators ===== */
+#printArea{ display: none; }
 @media print{
-  body *{ visibility: hidden; }
-  .print-target, .print-target *{ visibility: visible; }
-  .print-target{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border: none;
+  .app-shell{ display: none !important; }
+  #printArea{
+    display: block !important;
+    white-space: pre-wrap;
     padding: 30px;
     font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    line-height: 1.8;
   }
 }
