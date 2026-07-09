@@ -192,3 +192,50 @@
 .faq-category-title:first-child{ margin-top: 0; }
 .faq-answer{ margin:0 0 20px; color: var(--ink-soft); font-size:0.92rem; line-height:1.7; }
 .faq-answer a{ color: var(--seal-red); text-decoration:underline; }
+
+/* ===== E-Filing Center ===== */
+.efiling-hero-cta{
+  text-align:center;
+  margin-bottom: 30px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 10px;
+}
+.efiling-start-btn{ font-size: 1rem; padding: 14px 30px; }
+.efiling-alt-link{ font-size: 0.82rem; color: var(--ink-soft); text-decoration:underline; }
+.efiling-section-title{
+  font-family: var(--serif);
+  color: var(--navy);
+  font-size: 1.15rem;
+  margin: 30px 0 12px;
+}
+.efiling-text{ color: var(--ink-soft); line-height:1.8; font-size:0.94rem; }
+.efiling-steps{
+  padding-left: 22px;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height:1.6;
+}
+.efiling-list{
+  list-style: disc;
+  padding-left: 22px;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+.efiling-guides-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 560px){
+  .efiling-guides-grid{ grid-template-columns: 1fr; }
+}
+.efiling-guide-card{ display:block; text-decoration:none; }
+.efiling-guide-card h3{ color: var(--navy); }
