@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<script>if(location.hostname==="advocatepratibhayadav26.github.io"){location.replace("https://advocatepratibhayadav.in"+location.pathname.replace(/^\/advocate-website/,"")+location.search);}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>सामाजिक मुद्दे उठाएं (मुफ्त) | Advocate Pratibha Yadav</title>
+<meta name="description" content="आम जनता की परेशानियों और सामाजिक मुद्दों को मुफ्त में उठाने का मंच। अपनी समस्या साझा करें — Advocate Pratibha Yadav।">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#1B2A41">
+<link rel="canonical" href="https://advocatepratibhayadav.in/social-issues.html">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tools.css">
+</head>
+<body>
+
+<div class="app-shell">
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark">⚖</span>
+      <div>
+        <h1>Advocate Pratibha Yadav</h1>
+        <p class="brand-sub">Civil Court, Mahmudabad · District Sitapur</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="index.html#posts">Latest Updates</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section tool-section">
+  <p class="eyebrow center">Community Voice</p>
+  <h2 class="section-title center">सामाजिक मुद्दे उठाएं — बिल्कुल मुफ्त</h2>
+  <p class="tool-intro center">अगर आपके क्षेत्र में कोई सार्वजनिक समस्या है — सरकारी लापरवाही, अवसंरचना, पर्यावरण, या कोई और सामाजिक मुद्दा — यहां साझा करें। आपकी जानकारी गोपनीय रहेगी, चाहें तो नाम गुमनाम भी रख सकते हैं।</p>
+
+  <div class="tool-disclaimer">
+    ℹ️ यह सुविधा आम जनता की आवाज़ उठाने के लिए एक मुफ्त मंच है, यह कानूनी सलाह या प्रतिनिधित्व की गारंटी नहीं है। गंभीर व्यक्तिगत कानूनी मामलों के लिए कृपया सीधे <a href="index.html#appointment">Appointment</a> बुक करें।
+  </div>
+
+  <form id="issueForm" class="generator-form">
+    <label for="issueName">आपका नाम (वैकल्पिक)</label>
+    <input id="issueName" type="text" placeholder="चाहें तो खाली छोड़ सकते हैं">
+
+    <label class="checkbox-row">
+      <input id="issueShowName" type="checkbox"> मेरा नाम सार्वजनिक रूप से दिखाया जा सकता है (अगर यह मुद्दा website पर दिखाया जाए)
+    </label>
+
+    <label for="issueContact">मोबाइल / ईमेल (वैकल्पिक, सिर्फ संपर्क के लिए — कभी सार्वजनिक नहीं होगा)</label>
+    <input id="issueContact" type="text" placeholder="9876543210">
+
+    <label for="issueLocation">क्षेत्र / गांव / शहर</label>
+    <input id="issueLocation" type="text" required placeholder="जैसे: महमूदाबाद, सीतापुर">
+
+    <label for="issueCategory">श्रेणी</label>
+    <select id="issueCategory" required>
+      <option value="">चुनें</option>
+      <option value="सरकारी लापरवाही">सरकारी लापरवाही</option>
+      <option value="सार्वजनिक अवसंरचना">सार्वजनिक अवसंरचना (सड़क, पानी, बिजली)</option>
+      <option value="पर्यावरण">पर्यावरण सम्बंधित</option>
+      <option value="उपभोक्ता समस्या">उपभोक्ता समस्या</option>
+      <option value="भ्रष्टाचार">भ्रष्टाचार</option>
+      <option value="अन्य">अन्य</option>
+    </select>
+
+    <label for="issueDescription">अपनी समस्या विस्तार से बताएं</label>
+    <textarea id="issueDescription" rows="6" required placeholder="क्या समस्या है, कब से है, किससे सम्बंधित है — विस्तार से लिखें"></textarea>
+
+    <label for="issueImage">फोटो (वैकल्पिक)</label>
+    <input id="issueImage" type="file" accept="image/*">
+    <p class="post-file-hint">Photo अपने आप resize और compress हो जाएगी।</p>
+    <img id="issueImagePreview" class="post-image-preview" hidden>
+
+    <div class="generator-form-actions">
+      <button type="submit" id="issueSubmitBtn">📢 अपनी बात रखें</button>
+    </div>
+    <p id="issueFormStatus" class="form-status" hidden></p>
+  </form>
+</section>
+
+<section class="section alt tool-section">
+  <h3 class="efiling-section-title" style="text-align:center;">🗣️ सामने आए मुद्दे</h3>
+  <p class="tool-intro center">यहां वो मुद्दे दिखाए गए हैं जिन्हें साझा करने वालों ने सार्वजनिक करने पर सहमति दी।</p>
+  <div id="publicIssuesContainer" class="card-grid"></div>
+  <p id="publicIssuesEmpty" class="empty-state" hidden>अभी कोई मुद्दा सार्वजनिक रूप से नहीं दिखाया गया है।</p>
+</section>
+
+<section class="tool-cta-section">
+  <p>व्यक्तिगत कानूनी सलाह चाहिए?</p>
+  <a href="index.html#appointment" class="btn">📅 Appointment Book करें</a>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span aria-hidden="true">·</span>
+    <a href="disclaimer.html">Disclaimer</a>
+  </div>
+  <p>© 2026 Advocate Pratibha Yadav. All Rights Reserved.</p>
+</footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="social-issues.js"></script>
+</body>
+</html>
