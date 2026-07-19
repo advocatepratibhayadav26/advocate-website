@@ -59,6 +59,7 @@
     <button class="admin-tab-btn active" data-tab="appointmentsView">📅 Appointments</button>
     <button class="admin-tab-btn" data-tab="postsView">📝 Manage Posts</button>
     <button class="admin-tab-btn" data-tab="galleryView">🖼️ Gallery</button>
+    <button class="admin-tab-btn" data-tab="socialIssuesView">📢 Social Issues</button>
     <button class="admin-tab-btn" data-tab="securityView">🔒 Security</button>
   </nav>
 
@@ -278,6 +279,27 @@
 
     </div>
 
+    <!-- ===== SOCIAL ISSUES ===== -->
+    <div id="socialIssuesView" class="admin-tab-panel" hidden>
+
+      <section class="table-wrap">
+        <h2 class="posts-list-heading">📢 जनता से आए सामाजिक मुद्दे</h2>
+        <div class="controls-bar">
+          <input id="issueSearchInput" type="text" placeholder="🔍 Search by location, category, name…" class="search-input">
+          <select id="issueStatusFilter">
+            <option value="all">All Statuses</option>
+            <option value="new">New</option>
+            <option value="under-review">Under Review</option>
+            <option value="escalated">Escalated</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div id="adminIssuesList" class="admin-issues-list"></div>
+        <p id="issuesEmptyState" class="empty-state" hidden>अभी कोई मुद्दा जमा नहीं हुआ है।</p>
+      </section>
+
+    </div>
+
     <!-- ===== SECURITY ===== -->
     <div id="securityView" class="admin-tab-panel" hidden>
 
@@ -338,6 +360,6 @@
 <script src="admin.js"></script>
 <script src="admin-posts.js"></script>
 <script src="admin-gallery.js"></script>
+<script src="admin-social-issues.js"></script>
 </body>
-                                                                                            </html>
-                                                                                            
+</html>
